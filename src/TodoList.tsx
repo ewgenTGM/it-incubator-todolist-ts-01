@@ -10,7 +10,7 @@ export type TaskType = {
 export type TodoListPropsType = {
   label: string,
   date: string,
-  tasks: Array<TaskType>,
+  tasks: Array<TaskType>
 }
 
 const TodoList = (props: TodoListPropsType) => {
