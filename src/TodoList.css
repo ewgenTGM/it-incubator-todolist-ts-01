@@ -1,4 +1,23 @@
-.btn{
+.btn {
     padding: 2px 5px;
     margin: 5px;
+}
+
+.todo {
+    margin: 15px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px gray;
+}
+
+ul {
+    list-style: none;
+    margin: 5px 0;
+    padding: 0;
+}
+
+.active {
+    color: blue;
+    font-weight: bold;
 }

@@ -1,9 +1,13 @@
 .App {
   padding: 30px;
-  display: flex;
 }
 
 .App > div {
   margin-right: 50px;
 }
 
+.appContainer{
+  margin: 0 auto;
+  max-width: 80%;
+  display: flex;
+}
