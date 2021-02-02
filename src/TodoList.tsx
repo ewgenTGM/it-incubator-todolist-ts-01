@@ -1,94 +1,124 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import './TodoList.css';
 
 export type TaskType = {
-  id: number,
-  label: string,
+  id: string
+  label: string
   isDone: boolean
 }
 
 export type TodoListPropsType = {
-  id: number,
-  label: string,
-  date: string,
+  id: string
+  label: string
+  date: string
   tasks: Array<TaskType>
+  currentFilter: FilterValuesType
+  addTask: (text: string, todoListId: string) => void
+  removeTask: (id: string, todoListId: string) => void
+  setFilter: (filter: FilterValuesType, todoListId: string) => void
+  setIsDone: (id: string, value: boolean, todoListId: string) => void
+  removeTodoList: (todoListId: string) => void
 }
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
 const TodoList = (props: TodoListPropsType) => {
-
-  const [tasks, setTasks] = useState<Array<TaskType>>(props.tasks);
-  const [filter, setFilter] = useState<FilterValuesType>('all');
+  const [newTaskText, setNewTaskText] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   const changeFilter = (filter: FilterValuesType) => {
-    setFilter(filter);
-    console.log(filter);
+    props.setFilter(filter, props.id);
   };
 
-  const removeTask = (taskId: number): void => {
-    setTasks(tasks.filter(item => item.id !== taskId));
-  };
-
-  let tasksForTodoList;
-
-  switch (filter) {
-    case 'active':
-      tasksForTodoList = tasks.filter(task => !task.isDone);
-      break;
-    case 'completed':
-      tasksForTodoList = tasks.filter(tasks => tasks.isDone);
-      break;
-    case 'all':
-      tasksForTodoList = tasks;
-      break;
-    default:
-      tasksForTodoList = tasks;
-      break;
-  }
-
-  const mappedTasks = tasksForTodoList.map(task => {
+  const mappedTasks = props.tasks.map(task => {
+    const setIsDone = (event: ChangeEvent<HTMLInputElement>) => props.setIsDone(task.id, event.currentTarget.checked, props.id);
     return (
-        <li key={task.id}>
-          <button onClick={() => removeTask(task.id)}>
-            del
+        <li
+            key={task.id}
+            className={task.isDone ? 'done' : ''}>
+          <button onClick={() => props.removeTask(task.id, props.id)}>
+            X
           </button>
           <input
               type="checkbox"
               readOnly={true}
-              checked={task.isDone}/>
+              checked={task.isDone}
+              onChange={setIsDone}/>
           <span>{task.label}</span>
         </li>
     );
   });
 
+  const addTask = () => {
+    if (newTaskText.trim()) {
+      props.addTask(newTaskText, props.id);
+      setNewTaskText('');
+      setError(null);
+    } else {
+      setError('Empty task title...');
+      setNewTaskText('');
+    }
+  };
+
   return (
       <div className='todo'>
-        <h3>{props.label}</h3>
-        <div>
+        <button
+            className='delete_btn'
+            onClick={() => props.removeTodoList(props.id)}>X
+        </button>
+        <div className='add_task_block'>
+          <div className='todo_title'>{props.label}</div>
           <input
+              className='date_input'
               type='date'
               readOnly={true}
               value={props.date}/>
-          <button className='btn'>+</button>
+          <input
+              type="text"
+              className='task_input'
+              placeholder='Input task'
+              value={newTaskText}
+              onChange={e => {
+                setNewTaskText(e.currentTarget.value);
+                setError(null);
+              }}
+              onKeyPress={e => {
+                if (e.key === 'Enter')
+                  addTask();
+              }}
+              onBlur={() => setError(null)}/>
+          <button
+              className='add_task_btn btn'
+              onClick={addTask}>
+            Add task
+          </button>
+          <div>
+            {error && <span className='error'>{error}</span>}
+          </div>
         </div>
+        <fieldset>
+          <legend>Set filter</legend>
+          <div className={'button_block'}>
+            <button
+                className={`btn ${props.currentFilter === 'all' && 'active'}`}
+                onClick={() => changeFilter('all')}>
+              All
+            </button>
+            <button
+                className={`btn ${props.currentFilter === 'active' && 'active'}`}
+                onClick={() => changeFilter('active')}>
+              Active
+            </button>
+            <button
+                className={`btn ${props.currentFilter === 'completed' && 'active'}`}
+                onClick={() => changeFilter('completed')}>
+              Completed
+            </button>
+          </div>
+        </fieldset>
         <ul>
-          {mappedTasks}
+          {mappedTasks.length !== 0 ? mappedTasks : <div>No tasks</div>}
         </ul>
-        <div>
-          <button
-              className={`btn ${filter==='all'?'active':''}`}
-              onClick={() => changeFilter('all')}>All
-          </button>
-          <button
-              className={`btn ${filter==='active'?'active':''}`}
-              onClick={() => changeFilter('active')}>Active
-          </button>
-          <button
-              className={`btn ${filter==='completed'?'active':''}`}
-              onClick={() => changeFilter('completed')}>Completed
-          </button>
-        </div>
       </div>
   );
 };
