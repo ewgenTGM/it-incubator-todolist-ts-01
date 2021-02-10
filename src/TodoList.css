@@ -7,28 +7,60 @@
     width: 350px;
     margin: 15px;
     padding: 10px;
-    border: 1px solid gray;
     border-radius: 3px;
-    box-shadow: 1px 1px 3px gray;
+    box-shadow: 0 0 3px black;
+    transition: all 3s;
 }
 
-.deleting{
+.deleting {
 
 }
 
-.delete_btn{
+@keyframes rotate {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.delete_btn {
+    box-shadow: 0 0 3px black;
     position: absolute;
+    border: none;
     top: 5px;
     right: 5px;
-    border-radius: 3px;
-    border: 1px solid black;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border-radius: 50%;
+    border-top: 2px solid black;
     cursor: pointer;
+    outline: none;
+}
+
+.delete_btn:hover {
+    animation: rotate 1s 0.2s infinite;
+}
+
+@keyframes shadowing {
+    0% {
+        text-shadow: none
+    }
+    50% {
+        text-shadow: 0 0 3px black;
+    }
+    100% {
+        text-shadow: none
+    }
 }
 
 .todo_title {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 15px;
+    animation: shadowing 5s infinite;
 }
 
 ul {
@@ -75,21 +107,6 @@ li input {
     margin: 5px;
 }
 
-.add_task_btn {
-    cursor: pointer;
-}
-
-.task_input {
-    padding: 5px;
-    margin-top: 5px;
-    width: 100%;
-}
-
-.date_input {
-    text-align: center;
-    width: auto;
-}
-
 .add_task_block {
     display: flex;
     flex-direction: column;
@@ -104,9 +121,4 @@ fieldset {
     padding: 5px;
     border-left: 3px solid black;
     border-right: 3px solid black;
-}
-
-.error {
-    color: red;
-    font-size: 12px;
 }

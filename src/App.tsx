@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './App.css';
 import TodoList, { FilterValuesType, TaskType } from './TodoList';
 import { v1 } from 'uuid';
+import { AddItemForm } from './AddItemForm';
 
-let dateNow: Date = new Date( Date.now() );
-let dateNowString: string = `${ dateNow.getFullYear() }-${ dateNow.getMonth() < 9 ? '0' + ( dateNow.getMonth() + 1 ) : dateNow.getMonth() + 1 }-${ dateNow.getDate() < 10 ? ( '0' + dateNow.getDate() ) : dateNow.getDate() }`;
+// let dateNow: Date = new Date( Date.now() );
+// let dateNowString: string = `${ dateNow.getFullYear() }-${ dateNow.getMonth() < 9 ? '0' + ( dateNow.getMonth() + 1 ) : dateNow.getMonth() + 1 }-${ dateNow.getDate() < 10 ? ( '0' + dateNow.getDate() ) : dateNow.getDate() }`;
 
 type TodoListType = {
   id: string
@@ -98,6 +99,14 @@ const App = () => {
     }
   };
 
+  const changeTaskLabel = ( taskId: string, value: string, todoListId: string ) => {
+    const task = tasks[todoListId].find( task => task.id === taskId );
+    if ( task ) {
+      task.label = value;
+      setTasks( { ...tasks } );
+    }
+  };
+
   const setFilter = ( filter: FilterValuesType, todoListId: string ) => {
     const todoList = todoLists.find( todoList => todoList.id === todoListId );
     if ( todoList ) {
@@ -113,6 +122,12 @@ const App = () => {
     setTodoLists( todoLists.filter( todoList => todoList.id !== todoListId ) );
     delete tasks[todoListId];
     setTasks( { ...tasks } );
+  };
+
+  const addTodoList = ( title: string ) => {
+    const newTodoListId = v1();
+    setTodoLists( [ { id: newTodoListId, filter: 'all', title: title }, ...todoLists ] );
+    setTasks( { ...tasks, [newTodoListId]: [] } );
   };
 
   const mappedTodoLists = todoLists.map( todoList => {
@@ -134,7 +149,6 @@ const App = () => {
             key={ todoList.id }
             id={ todoList.id }
             label={ todoList.title }
-            date={ dateNowString }
             tasks={ tasksForTodoList }
             addTask={ addTask }
             removeTask={ removeTask }
@@ -142,10 +156,16 @@ const App = () => {
             currentFilter={ todoList.filter }
             setIsDone={ setIsDone }
             removeTodoList={ removeTodoList }
+            changeTaskLabel={ changeTaskLabel }
         /> );
   } );
 
   return <div className='appContainer'>
+
+    <AddItemForm
+        onSubmit={ addTodoList }
+        buttonLabel={ 'Add todo' }
+        inputPlaceholder={ 'Add todo' }/>
     { mappedTodoLists }
   </div>;
 };
