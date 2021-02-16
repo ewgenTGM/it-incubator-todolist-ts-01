@@ -24,30 +24,27 @@ export const EditableSpan: React.VFC<EditableSpanPropType> = ( props ) => {
 
   const restoreOldValue = () => setText( oldText );
 
-  return (
+  const input = <input
+      autoFocus
+      className={ styles.input }
+      type={ 'text' }
+      value={ text }
+      onBlur={ () => setEditModeOff() }
+      onKeyPress={ e => {
+        if ( e.key === 'Enter' )
+          setEditModeOff();
+      } }
+      onKeyUp={ e => {
+        if ( e.key === 'Escape' ) {
+          setEditModeOff();
+          restoreOldValue();
+        }
+      } }
+      onChange={ e => setText( e.currentTarget.value ) }/>;
 
-      editMode
-          ? <input
-              autoFocus
-              className={ styles.input }
-              type={ 'text' }
-              value={ text }
-              onBlur={ () => setEditModeOff() }
-              onKeyPress={ e => {
-                if ( e.key === 'Enter' )
-                  setEditModeOff();
-              } }
-              onKeyUp={ e => {
-                if ( e.key === 'Escape' ) {
-                  setEditModeOff();
-                  restoreOldValue();
-                }
-              } }
-              onChange={ e => setText( e.currentTarget.value ) }/>
-          : <span
-              className={ styles.editable_span }
-              onDoubleClick={ setEditModeOn }>{ text }</span>
+  const span = <span
+      className={ styles.editable_span }
+      onDoubleClick={ setEditModeOn }>{ text }</span>;
 
-
-  );
+  return editMode ? input : span;
 };

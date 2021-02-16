@@ -1,15 +1,13 @@
 .App {
-  padding: 30px;
+    padding: 30px;
 }
 
 .App > div {
-  margin-right: 50px;
+    margin-right: 50px;
 }
 
-.appContainer{
-  margin: 0 auto;
-  max-width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+html{
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
 }

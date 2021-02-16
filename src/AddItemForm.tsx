@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import styles from './AddItemForm.module.css';
+import { Box, Button, TextField } from '@material-ui/core';
 
 
 type AddItemFormType = {
   onSubmit: ( text: string ) => void
   inputPlaceholder?: string
   buttonLabel: string
+  defaultWidth?: string
 }
 
 export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
@@ -13,7 +14,7 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
   const [ text, setText ] = useState<string>( '' );
   const [ error, setError ] = useState<string | null>( null );
 
-  const addTask = () => {
+  const addItem = () => {
     if ( text.trim() ) {
       props.onSubmit( text );
       setText( '' );
@@ -25,11 +26,22 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
   };
 
   return (
-      <div className={ styles.add_item_form }>
-        <input
-            type="text"
-            className={ styles.task_input }
-            placeholder={ props.inputPlaceholder && props.inputPlaceholder }
+      <Box
+          paddingTop={ 3 }
+          paddingBottom={ 3 }
+          display={ 'flex' }
+          flexDirection={ 'column' }
+          alignItems={ 'center' }
+          justifyContent={ 'center' }
+          style={ { width: props.defaultWidth, boxSizing: 'border-box' } }>
+        <TextField
+            style={ { width: '100%' } }
+            variant={ 'outlined' }
+            size={ 'small' }
+            type={ text }
+            error={ !!error }
+            label={ props.inputPlaceholder }
+            helperText={ error }
             value={ text }
             onChange={ e => {
               setText( e.currentTarget.value );
@@ -37,17 +49,17 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
             } }
             onKeyPress={ e => {
               if ( e.key === 'Enter' )
-                addTask();
+                addItem();
             } }
-            onBlur={ () => setError( null ) }/>
-        <button
-            className={ styles.add_item_btn }
-            onClick={ addTask }>
+            onBlur={ () => setError( null ) }
+        />
+        <Button
+            style={ { marginTop: '10px' } }
+            variant={ 'contained' }
+            size={ 'small' }
+            onClick={ addItem }>
           { props.buttonLabel }
-        </button>
-        <div>
-          { error && <span className={ styles.error }>{ error }</span> }
-        </div>
-      </div>
+        </Button>
+      </Box>
   );
 };

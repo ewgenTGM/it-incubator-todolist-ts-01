@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
-import TodoList, { FilterValuesType, TaskType } from './TodoList';
 import { v1 } from 'uuid';
 import { AddItemForm } from './AddItemForm';
+import { FilterValuesType, TaskType, TodoList } from './TodoList';
+import { Box, Container, Paper } from '@material-ui/core';
 
 // let dateNow: Date = new Date( Date.now() );
 // let dateNowString: string = `${ dateNow.getFullYear() }-${ dateNow.getMonth() < 9 ? '0' + ( dateNow.getMonth() + 1 ) : dateNow.getMonth() + 1 }-${ dateNow.getDate() < 10 ? ( '0' + dateNow.getDate() ) : dateNow.getDate() }`;
@@ -74,7 +75,10 @@ const App = () => {
   } );
 
   const removeTask = ( taskId: string, todoListId: string ) => {
-    tasks[todoListId] = tasks[todoListId].filter( task => task.id !== taskId );
+    if ( !window.confirm( `Are You sure want to remove <${ tasks[todoListId].find( t => t.id === taskId )?.label }> task?` ) ) {
+      return;
+    }
+    tasks[todoListId] = tasks[todoListId].filter( t => t.id !== taskId );
     setTasks( { ...tasks } );
   };
 
@@ -92,7 +96,7 @@ const App = () => {
   };
 
   const setIsDone = ( taskId: string, value: boolean, todoListId: string ) => {
-    const task = tasks[todoListId].find( task => task.id === taskId );
+    const task = tasks[todoListId].find( t => t.id === taskId );
     if ( task ) {
       task.isDone = value;
       setTasks( { ...tasks } );
@@ -100,7 +104,7 @@ const App = () => {
   };
 
   const changeTaskLabel = ( taskId: string, value: string, todoListId: string ) => {
-    const task = tasks[todoListId].find( task => task.id === taskId );
+    const task = tasks[todoListId].find( t => t.id === taskId );
     if ( task ) {
       task.label = value;
       setTasks( { ...tasks } );
@@ -108,7 +112,7 @@ const App = () => {
   };
 
   const setFilter = ( filter: FilterValuesType, todoListId: string ) => {
-    const todoList = todoLists.find( todoList => todoList.id === todoListId );
+    const todoList = todoLists.find( t => t.id === todoListId );
     if ( todoList ) {
       todoList.filter = filter;
       setTodoLists( [ ...todoLists ] );
@@ -138,10 +142,10 @@ const App = () => {
         tasksForTodoList = tasks[todoList.id];
         break;
       case 'active':
-        tasksForTodoList = tasks[todoList.id].filter( task => !task.isDone );
+        tasksForTodoList = tasks[todoList.id].filter( t => !t.isDone );
         break;
       case 'completed':
-        tasksForTodoList = tasks[todoList.id].filter( tasks => tasks.isDone );
+        tasksForTodoList = tasks[todoList.id].filter( t => t.isDone );
         break;
     }
     return (
@@ -160,14 +164,39 @@ const App = () => {
         /> );
   } );
 
-  return <div className='appContainer'>
-
-    <AddItemForm
-        onSubmit={ addTodoList }
-        buttonLabel={ 'Add todo' }
-        inputPlaceholder={ 'Add todo' }/>
-    { mappedTodoLists }
-  </div>;
+  return (
+      <Container style={ { marginTop: '25px' } }>
+        <Box
+            display={ 'flex' }
+            flexDirection={ 'column' }
+            justifyContent={ 'center' }
+            alignItems={ 'center' }>
+          <AddItemForm
+              defaultWidth={ '600px' }
+              onSubmit={ addTodoList }
+              buttonLabel={ 'Add todo' }
+              inputPlaceholder={ 'Add todo' }/>
+          <Box
+              display={ 'flex' }
+              justifyContent={ 'center' }
+              alignItems={ 'center' }
+              flexWrap={ 'wrap' }>
+            { mappedTodoLists }
+          </Box>
+        </Box>
+      </Container>
+  );
 };
 
 export default App;
+
+/*<AppBar position="static">
+ <Toolbar>
+ <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+ <MenuIcon />
+ </IconButton>
+ <Typography variant="h6" className={classes.title}>
+ News
+ </Typography>
+ <Button color="inherit">Login</Button>
+ </Toolbar>*/

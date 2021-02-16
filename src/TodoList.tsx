@@ -2,6 +2,8 @@ import React, { ChangeEvent } from 'react';
 import './TodoList.css';
 import { AddItemForm } from './AddItemForm';
 import { EditableSpan } from './EditableSpan';
+import { Box, Button, Checkbox, IconButton, Paper, Tooltip } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export type TaskType = {
   id: string
@@ -24,7 +26,7 @@ export type TodoListPropsType = {
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
-const TodoList = ( props: TodoListPropsType ) => {
+export const TodoList = ( props: TodoListPropsType ) => {
 
   const addTask = ( text: string ) => {
     props.addTask( text, props.id );
@@ -40,60 +42,80 @@ const TodoList = ( props: TodoListPropsType ) => {
       props.changeTaskLabel( task.id, text, props.id );
     };
     return (
-        <li
+        <div
             key={ task.id }
-            className={ task.isDone ? 'done' : '' }>
-          <button onClick={ () => props.removeTask( task.id, props.id ) }>
-            X
-          </button>
-          <input
-              type="checkbox"
+            className={ 'task ' + ( task.isDone ? 'done' : '' ) }>
+          <Tooltip title={ 'Remove task' }>
+            <IconButton style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }>
+              <DeleteIcon
+                  fontSize={ 'small' }
+                  onClick={ () => props.removeTask( task.id, props.id ) }
+              />
+            </IconButton>
+          </Tooltip>
+          <Checkbox
+              color={ 'primary' }
               readOnly={ true }
               checked={ task.isDone }
-              onChange={ setIsDone }/>
-          <EditableSpan initialText={ task.label } callback={changeTaskLabel}/>
-        </li>
+              onChange={ setIsDone }
+          />
+          <EditableSpan
+              initialText={ task.label }
+              callback={ changeTaskLabel }/>
+        </div>
     );
   } );
+  const filterButtons = <fieldset>
+    <legend>Set filter</legend>
+    <Box
+        display={ 'flex' }
+        justifyContent={ 'space-around' }
+        alignItems={ 'center' }>
+      <Button
+          size={ 'small' }
+          color={ 'primary' }
+          variant={ props.currentFilter === 'all' ? 'contained' : 'outlined' }
+          onClick={ () => changeFilter( 'all' ) }>
+        All
+      </Button>
+      <Button
+          size={ 'small' }
+          color={ 'primary' }
+          variant={ props.currentFilter === 'active' ? 'contained' : 'outlined' }
+          onClick={ () => changeFilter( 'active' ) }>
+        Active
+      </Button>
+      <Button
+          size={ 'small' }
+          color={ 'primary' }
+          variant={ props.currentFilter === 'completed' ? 'contained' : 'outlined' }
+          onClick={ () => changeFilter( 'completed' ) }>
+        Completed
+      </Button>
+    </Box>
+  </fieldset>;
 
   return (
-      <div className='todo'>
-        <button
-            className='delete_btn'
-            onClick={ () => props.removeTodoList( props.id ) }>X
-        </button>
-        <div className='add_task_block'>
-          <div className='todo_title'>{ props.label }</div>
-          <AddItemForm
-              onSubmit={ addTask }
-              buttonLabel={ 'Add task' }
-              inputPlaceholder={ 'Input task' }/>
-        </div>
-        <fieldset>
-          <legend>Set filter</legend>
-          <div className={ 'button_block' }>
-            <button
-                className={ `btn ${ props.currentFilter === 'all' && 'active' }` }
-                onClick={ () => changeFilter( 'all' ) }>
-              All
-            </button>
-            <button
-                className={ `btn ${ props.currentFilter === 'active' && 'active' }` }
-                onClick={ () => changeFilter( 'active' ) }>
-              Active
-            </button>
-            <button
-                className={ `btn ${ props.currentFilter === 'completed' && 'active' }` }
-                onClick={ () => changeFilter( 'completed' ) }>
-              Completed
-            </button>
-          </div>
-        </fieldset>
-        <ul>
-          { mappedTasks.length !== 0 ? mappedTasks : <div>No tasks</div> }
-        </ul>
-      </div>
+      <Paper
+          elevation={ 3 }
+          style={ { padding: '15px', margin: '20px', position: 'relative', width: '350px' } }>
+        <Tooltip
+            title={ 'Remove todo' }>
+          <IconButton style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }>
+            <DeleteIcon
+                fontSize={ 'default' }
+                onClick={ () => props.removeTodoList( props.id ) }
+                className={ 'delete_btn' }
+            />
+          </IconButton>
+        </Tooltip>
+        <div className='todo_title'>{ props.label }</div>
+        <AddItemForm
+            onSubmit={ addTask }
+            buttonLabel={ 'Add task' }
+            inputPlaceholder={ 'Input task' }/>
+        { mappedTasks.length !== 0 && filterButtons }
+        { mappedTasks.length !== 0 ? mappedTasks : <div>No tasks</div> }
+      </Paper>
   );
 };
-
-export default TodoList;
