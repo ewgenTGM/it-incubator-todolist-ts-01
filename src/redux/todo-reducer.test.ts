@@ -1,5 +1,5 @@
 import { v1 } from 'uuid';
-import { addTodoListAc, todoListReducer, TodoListStateType } from './todo-reducer';
+import { addTodoListAC, todoListReducer, TodoListStateType } from './todo-reducer';
 
 
 test( 'Added post must be in the Array of todos', () => {
@@ -12,7 +12,9 @@ test( 'Added post must be in the Array of todos', () => {
     ]
   };
   const newTodoTitle = 'TEST TODO LIST TITLE';
-  const newState = todoListReducer( state, addTodoListAc( newTodoTitle ) );
+  const newState = todoListReducer( state, addTodoListAC( newTodoTitle ) );
   expect(state).not.toBe(newState);
   expect(state.todos).not.toBe(newState.todos);
+  expect(newState.todos.length).toBe(state.todos.length + 1)
+  expect(newState.todos[0].title).toBe(newTodoTitle);
 } );
