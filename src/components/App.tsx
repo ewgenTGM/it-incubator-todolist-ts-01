@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
 import { v1 } from 'uuid';
-import { AddItemForm } from './AddItemForm';
-import { FilterValuesType, TaskType, TodoList } from './TodoList';
-import { Box, Container, Paper } from '@material-ui/core';
+import { AddItemForm } from './add-item-form/AddItemForm';
+import { FilterValuesType, TaskType, TodoList } from './todo-list/TodoList';
+import { AppBar, Box, Button, Container, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 // let dateNow: Date = new Date( Date.now() );
 // let dateNowString: string = `${ dateNow.getFullYear() }-${ dateNow.getMonth() < 9 ? '0' + ( dateNow.getMonth() + 1 ) : dateNow.getMonth() + 1 }-${ dateNow.getDate() < 10 ? ( '0' + dateNow.getDate() ) : dateNow.getDate() }`;
@@ -165,38 +166,44 @@ const App = () => {
   } );
 
   return (
-      <Container style={ { marginTop: '25px' } }>
-        <Box
-            display={ 'flex' }
-            flexDirection={ 'column' }
-            justifyContent={ 'center' }
-            alignItems={ 'center' }>
-          <AddItemForm
-              defaultWidth={ '600px' }
-              onSubmit={ addTodoList }
-              buttonLabel={ 'Add todo' }
-              inputPlaceholder={ 'Add todo' }/>
+      <>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+                edge="start"
+                color="inherit">
+              <MenuIcon/>
+            </IconButton>
+            <Typography
+                style={ { flexGrow: 1 } }
+                variant="h6">
+              Todo lists
+            </Typography>
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
+        <Container style={ { marginTop: '25px' } }>
           <Box
               display={ 'flex' }
+              flexDirection={ 'column' }
               justifyContent={ 'center' }
-              alignItems={ 'center' }
-              flexWrap={ 'wrap' }>
-            { mappedTodoLists }
+              alignItems={ 'center' }>
+            <AddItemForm
+                defaultWidth={ '600px' }
+                onSubmit={ addTodoList }
+                buttonLabel={ 'Add todo' }
+                inputPlaceholder={ 'Add todo' }/>
+            <Box
+                display={ 'flex' }
+                justifyContent={ 'flex-start' }
+                alignItems={ 'flex-start' }
+                flexWrap={ 'wrap' }>
+              { mappedTodoLists }
+            </Box>
           </Box>
-        </Box>
-      </Container>
+        </Container>
+      </>
   );
 };
 
 export default App;
-
-/*<AppBar position="static">
- <Toolbar>
- <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
- <MenuIcon />
- </IconButton>
- <Typography variant="h6" className={classes.title}>
- News
- </Typography>
- <Button color="inherit">Login</Button>
- </Toolbar>*/

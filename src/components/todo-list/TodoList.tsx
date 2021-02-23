@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import './TodoList.css';
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
+import { AddItemForm } from '../add-item-form/AddItemForm';
+import { EditableSpan } from '../editable-span/EditableSpan';
 import { Box, Button, Checkbox, IconButton, Paper, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -114,8 +114,10 @@ export const TodoList = ( props: TodoListPropsType ) => {
             onSubmit={ addTask }
             buttonLabel={ 'Add task' }
             inputPlaceholder={ 'Input task' }/>
-        { mappedTasks.length !== 0 && filterButtons }
-        { mappedTasks.length !== 0 ? mappedTasks : <div>No tasks</div> }
+        { filterButtons }
+        { mappedTasks.length !== 0
+            ? mappedTasks
+            : <div style={ { marginTop: '15px', textAlign: 'center' } }>No tasks</div> }
       </Paper>
   );
 };

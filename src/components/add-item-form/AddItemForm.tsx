@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { Box, Button, TextField } from '@material-ui/core';
 
 
@@ -7,12 +7,19 @@ type AddItemFormType = {
   inputPlaceholder?: string
   buttonLabel: string
   defaultWidth?: string
+  backgroundStyle?: CSSProperties
 }
 
 export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
 
+
   const [ text, setText ] = useState<string>( '' );
   const [ error, setError ] = useState<string | null>( null );
+
+  const style: CSSProperties = {
+    fontWeight: 'bold',
+    width: '100%'
+  };
 
   const addItem = () => {
     if ( text.trim() ) {
@@ -35,7 +42,7 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
           justifyContent={ 'center' }
           style={ { width: props.defaultWidth, boxSizing: 'border-box' } }>
         <TextField
-            style={ { width: '100%' } }
+            style={ style }
             variant={ 'outlined' }
             size={ 'small' }
             type={ text }

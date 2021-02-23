@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import styles from './EditableSpan.module.css';
 
 type EditableSpanPropType = {
