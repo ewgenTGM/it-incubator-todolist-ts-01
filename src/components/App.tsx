@@ -6,9 +6,6 @@ import { FilterValuesType, TaskType, TodoList } from './todo-list/TodoList';
 import { AppBar, Box, Button, Container, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-// let dateNow: Date = new Date( Date.now() );
-// let dateNowString: string = `${ dateNow.getFullYear() }-${ dateNow.getMonth() < 9 ? '0' + ( dateNow.getMonth() + 1 ) : dateNow.getMonth() + 1 }-${ dateNow.getDate() < 10 ? ( '0' + dateNow.getDate() ) : dateNow.getDate() }`;
-
 export type TodoListType = {
   id: string
   title: string
@@ -19,7 +16,7 @@ type TaskStateType = {
   [key: string]: Array<TaskType>
 }
 
-const App = () => {
+export const App = () => {
   const todoListId1 = v1();
   const todoListId2 = v1();
 
@@ -75,6 +72,29 @@ const App = () => {
     ]
   } );
 
+  const setFilter = ( filter: FilterValuesType, todoListId: string ) => {
+    const todoList = todoLists.find( t => t.id === todoListId );
+    if ( todoList ) {
+      todoList.filter = filter;
+      setTodoLists( [ ...todoLists ] );
+    }
+  };
+
+  const removeTodoList = ( todoListId: string ) => {
+    if ( !window.confirm( `Are You sure want to remove <${ todoLists.find( tl => tl.id === todoListId )?.title }> Todo list?` ) ) {
+      return;
+    }
+    setTodoLists( todoLists.filter( todoList => todoList.id !== todoListId ) );
+    delete tasks[todoListId];
+    setTasks( { ...tasks } );
+  };
+
+  const addTodoList = ( title: string ) => {
+    const newTodoListId = v1();
+    setTodoLists( [ { id: newTodoListId, filter: 'all', title: title }, ...todoLists ] );
+    setTasks( { ...tasks, [newTodoListId]: [] } );
+  };
+
   const removeTask = ( taskId: string, todoListId: string ) => {
     if ( !window.confirm( `Are You sure want to remove <${ tasks[todoListId].find( t => t.id === taskId )?.label }> task?` ) ) {
       return;
@@ -112,28 +132,6 @@ const App = () => {
     }
   };
 
-  const setFilter = ( filter: FilterValuesType, todoListId: string ) => {
-    const todoList = todoLists.find( t => t.id === todoListId );
-    if ( todoList ) {
-      todoList.filter = filter;
-      setTodoLists( [ ...todoLists ] );
-    }
-  };
-
-  const removeTodoList = ( todoListId: string ) => {
-    if ( !window.confirm( `Are You sure want to remove <${ todoLists.find( tl => tl.id === todoListId )?.title }> Todo list?` ) ) {
-      return;
-    }
-    setTodoLists( todoLists.filter( todoList => todoList.id !== todoListId ) );
-    delete tasks[todoListId];
-    setTasks( { ...tasks } );
-  };
-
-  const addTodoList = ( title: string ) => {
-    const newTodoListId = v1();
-    setTodoLists( [ { id: newTodoListId, filter: 'all', title: title }, ...todoLists ] );
-    setTasks( { ...tasks, [newTodoListId]: [] } );
-  };
 
   const mappedTodoLists = todoLists.map( todoList => {
     let tasksForTodoList: Array<TaskType>;
@@ -205,5 +203,3 @@ const App = () => {
       </>
   );
 };
-
-export default App;
