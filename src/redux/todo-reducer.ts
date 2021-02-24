@@ -1,9 +1,7 @@
 import { TodoListType } from '../components/App';
-import { v1 } from 'uuid';
 
 const ADD_TODOLIST = 'ADD_TODOLIST';
 const REMOVE_TODOLIST = 'REMOVE_TODOLIST';
-
 
 export type TodoListStateType = {
   todos: Array<TodoListType>
@@ -19,14 +17,17 @@ type AddTodoActionType = {
   type: typeof ADD_TODOLIST
   payload: {
     title: string
+    todoListId: string
   }
 }
-export const addTodoListAC = ( title: string ): AddTodoActionType => {
+
+export const addTodoListAC = ( title: string, todoListId: string ): AddTodoActionType => {
   return {
     type: ADD_TODOLIST,
-    payload: { title }
+    payload: { title, todoListId }
   };
 };
+
 export const removeTodoListAC = ( todoListId: string ): RemoveTodoActionType => {
   return {
     type: REMOVE_TODOLIST,
@@ -40,11 +41,15 @@ export const todoListReducer = ( state: TodoListStateType, action: TodoReducerAc
   switch ( action.type ) {
     case 'ADD_TODOLIST':
       const newTodoList: TodoListType = {
-        id: v1(),
+        id: action.payload.todoListId,
         title: action.payload.title,
         filter: 'all'
       };
       return { ...state, todos: [ newTodoList, ...state.todos ] };
+
+    case REMOVE_TODOLIST:
+      return { ...state, todos: state.todos.filter( todo => todo.id !== action.payload.todoListId ) };
+
     default:
       return state;
   }
