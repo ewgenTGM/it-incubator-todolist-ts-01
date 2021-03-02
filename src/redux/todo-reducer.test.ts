@@ -9,7 +9,6 @@ const todoListId1: string = v1();
 const todoListId2: string = v1();
 
 beforeEach( () => {
-
   state = {
     todos: [
       { id: todoListId1, title: 'Todolist_1 title', filter: 'all' },
