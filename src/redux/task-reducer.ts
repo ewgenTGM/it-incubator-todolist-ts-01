@@ -22,7 +22,7 @@ export type AddTaskActionType = {
   }
 }
 
-export const AddTaskAC = ( todoId: string, taskId: string, title: string ): AddTaskActionType => ( {
+export const addTaskAC = ( todoId: string, taskId: string, title: string ): AddTaskActionType => ( {
   type: ADD_TASK,
   payload: {
     todoId,
@@ -39,7 +39,7 @@ type RemoveTaskActionType = {
   }
 }
 
-export const RemoveTaskAC = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
+export const removeTaskAC = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
   type: REMOVE_TASK,
   payload: {
     todoId,
@@ -56,7 +56,7 @@ type SetIsDoneActionType = {
   }
 }
 
-export const SetIsDoneAC = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
+export const setIsDoneAC = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
   type: SET_IS_DONE,
   payload: {
     todoId,
@@ -70,16 +70,16 @@ type ChangeTitleActionType = {
   payload: {
     todoId: string,
     taskId: string,
-    label: string
+    title: string
   }
 }
 
-export const ChangeTitleAC = ( todoId: string, taskId: string, label: string ): ChangeTitleActionType => ( {
+export const changeTitleAC = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
   type: CHANGE_TITLE,
   payload: {
     todoId,
     taskId,
-    label
+    title
   }
 } );
 
@@ -104,10 +104,40 @@ export const taskReducer = ( state: TaskStateType, action: TaskReducerActionType
         [action.payload.todoId]: state[action.payload.todoId].filter( task => task.taskId !== action.payload.taskId )
       };
     }
+      // case SET_IS_DONE: {
+      //   const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
+      //   const task = tasks.find( t => t.taskId === action.payload.taskId );
+      //   if ( task ) {
+      //     task.isDone = action.payload.isDone;
+      //     return { ...state, [action.payload.todoId]: tasks };
+      //   }
+      //   return state;
+      // }
+      // case CHANGE_TITLE: {
+      //   const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
+      //   const task = tasks.find( t => t.taskId === action.payload.taskId );
+      //   if ( task ) {
+      //     task.title = action.payload.title;
+      //     return { ...state, [action.payload.todoId]: tasks };
+      //   }
+      //   return state;
+      // }
     case SET_IS_DONE: {
+      const stateCopy = { ...state };
+      const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+      if ( task ) {
+        task.isDone = action.payload.isDone;
+        return stateCopy;
+      }
       return state;
     }
     case CHANGE_TITLE: {
+      const stateCopy = { ...state };
+      const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+      if ( task ) {
+        task.title = action.payload.title;
+        return stateCopy;
+      }
       return state;
     }
     default: {
