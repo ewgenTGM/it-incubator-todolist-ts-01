@@ -1,4 +1,6 @@
 const ADD_TASK = 'ADD_TASK';
+const ADD_TODO = 'ADD_TODO';
+const REMOVE_TODO = 'REMOVE_TODO';
 const REMOVE_TASK = 'REMOVE_TASK';
 const SET_IS_DONE = 'SET_IS_DONE';
 const CHANGE_TITLE = 'CHANGE_TITLE';
@@ -13,7 +15,37 @@ export type TaskStateType = {
   [key: string]: Array<TaskType>
 }
 
-export type AddTaskActionType = {
+type RemoveTodoActionType = {
+  type: typeof REMOVE_TODO
+  payload: {
+    todoId: string
+  }
+}
+
+export const removeTodo = ( todoId: string ): RemoveTodoActionType => ( {
+  type: REMOVE_TODO,
+  payload: {
+    todoId
+  }
+} );
+
+type AddTodoActionType = {
+  type: typeof ADD_TODO
+  payload: {
+    title: string
+    todoId: string
+  }
+}
+
+export const addTodo = ( title: string, todoId: string ): AddTodoActionType => ( {
+  type: ADD_TODO,
+  payload: {
+    todoId, title
+  }
+} );
+
+
+type AddTaskActionType = {
   type: typeof ADD_TASK,
   payload: {
     todoId: string,
@@ -22,7 +54,7 @@ export type AddTaskActionType = {
   }
 }
 
-export const addTaskAC = ( todoId: string, taskId: string, title: string ): AddTaskActionType => ( {
+export const addTask = ( todoId: string, taskId: string, title: string ): AddTaskActionType => ( {
   type: ADD_TASK,
   payload: {
     todoId,
@@ -39,7 +71,7 @@ type RemoveTaskActionType = {
   }
 }
 
-export const removeTaskAC = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
+export const removeTask = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
   type: REMOVE_TASK,
   payload: {
     todoId,
@@ -56,7 +88,7 @@ type SetIsDoneActionType = {
   }
 }
 
-export const setIsDoneAC = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
+export const setIsDone = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
   type: SET_IS_DONE,
   payload: {
     todoId,
@@ -74,7 +106,7 @@ type ChangeTitleActionType = {
   }
 }
 
-export const changeTitleAC = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
+export const changeTitle = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
   type: CHANGE_TITLE,
   payload: {
     todoId,
@@ -83,10 +115,24 @@ export const changeTitleAC = ( todoId: string, taskId: string, title: string ): 
   }
 } );
 
-type TaskReducerActionType = AddTaskActionType | RemoveTaskActionType | SetIsDoneActionType | ChangeTitleActionType;
+type TaskReducerActionType =
+    AddTodoActionType
+    | AddTaskActionType
+    | RemoveTaskActionType
+    | SetIsDoneActionType
+    | ChangeTitleActionType
+    | RemoveTodoActionType;
 
 export const taskReducer = ( state: TaskStateType, action: TaskReducerActionType ): TaskStateType => {
   switch ( action.type ) {
+    case ADD_TODO: {
+      return { ...state, [action.payload.todoId]: [] };
+    }
+    case REMOVE_TODO: {
+      const newState = {...state}
+      delete newState[action.payload.todoId];
+      return { ...newState };
+    }
     case ADD_TASK: {
       const task: TaskType = {
         taskId: action.payload.taskId,

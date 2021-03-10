@@ -12,18 +12,24 @@ type AddItemFormType = {
 
 export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
 
+  const {
+    onSubmit,
+    inputPlaceholder,
+    buttonLabel,
+    defaultWidth,
+    backgroundStyle
+  } = props;
 
   const [ text, setText ] = useState<string>( '' );
   const [ error, setError ] = useState<string | null>( null );
 
   const style: CSSProperties = {
-    fontWeight: 'bold',
-    width: '100%'
+    fontWeight: 'bold'
   };
 
   const addItem = () => {
     if ( text.trim() ) {
-      props.onSubmit( text );
+      onSubmit( text );
       setText( '' );
       setError( null );
     } else {
@@ -40,14 +46,15 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
           flexDirection={ 'column' }
           alignItems={ 'center' }
           justifyContent={ 'center' }
-          style={ { width: props.defaultWidth, boxSizing: 'border-box' } }>
+          style={ { maxWidth: defaultWidth, boxSizing: 'border-box' } }>
         <TextField
+            className={'whiteBg'}
             style={ style }
-            variant={ 'outlined' }
+            variant={ 'filled' }
             size={ 'small' }
             type={ text }
             error={ !!error }
-            label={ props.inputPlaceholder }
+            label={ inputPlaceholder }
             helperText={ error }
             value={ text }
             onChange={ e => {
@@ -65,7 +72,7 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
             variant={ 'contained' }
             size={ 'small' }
             onClick={ addItem }>
-          { props.buttonLabel }
+          { buttonLabel }
         </Button>
       </Box>
   );

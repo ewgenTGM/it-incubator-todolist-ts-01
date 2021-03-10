@@ -98,7 +98,7 @@ export const TodoList = ( props: TodoListPropsType ) => {
   return (
       <Paper
           elevation={ 3 }
-          style={ { padding: '15px', margin: '20px', position: 'relative', width: '350px' } }>
+          style={ { padding: '15px', margin: '20px', position: 'relative', width: '300px' } }>
         <Tooltip
             title={ 'Remove todo' }>
           <IconButton style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }>
