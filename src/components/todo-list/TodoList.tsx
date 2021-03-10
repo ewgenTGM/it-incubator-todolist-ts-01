@@ -6,8 +6,8 @@ import { Box, Button, Checkbox, IconButton, Paper, Tooltip } from '@material-ui/
 import DeleteIcon from '@material-ui/icons/Delete';
 
 export type TaskType = {
-  id: string
-  label: string
+  taskId: string
+  title: string
   isDone: boolean
 }
 
@@ -37,19 +37,19 @@ export const TodoList = ( props: TodoListPropsType ) => {
 
 
   const mappedTasks = props.tasks.map( task => {
-    const setIsDone = ( event: ChangeEvent<HTMLInputElement> ) => props.setIsDone( task.id, event.currentTarget.checked, props.id );
+    const setIsDone = ( event: ChangeEvent<HTMLInputElement> ) => props.setIsDone( task.taskId, event.currentTarget.checked, props.id );
     const changeTaskLabel = ( text: string ) => {
-      props.changeTaskLabel( task.id, text, props.id );
+      props.changeTaskLabel( task.taskId, text, props.id );
     };
     return (
         <div
-            key={ task.id }
+            key={ task.taskId }
             className={ 'task ' + ( task.isDone ? 'done' : '' ) }>
           <Tooltip title={ 'Remove task' }>
             <IconButton style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }>
               <DeleteIcon
                   fontSize={ 'small' }
-                  onClick={ () => props.removeTask( task.id, props.id ) }
+                  onClick={ () => props.removeTask( task.taskId, props.id ) }
               />
             </IconButton>
           </Tooltip>
@@ -60,7 +60,7 @@ export const TodoList = ( props: TodoListPropsType ) => {
               onChange={ setIsDone }
           />
           <EditableSpan
-              initialText={ task.label }
+              initialText={ task.title }
               callback={ changeTaskLabel }/>
         </div>
     );

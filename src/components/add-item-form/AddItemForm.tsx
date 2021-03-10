@@ -48,9 +48,8 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
           justifyContent={ 'center' }
           style={ { maxWidth: defaultWidth, boxSizing: 'border-box' } }>
         <TextField
-            className={'whiteBg'}
             style={ style }
-            variant={ 'filled' }
+            variant={ 'outlined' }
             size={ 'small' }
             type={ text }
             error={ !!error }

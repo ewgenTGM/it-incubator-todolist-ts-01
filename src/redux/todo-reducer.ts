@@ -1,59 +1,61 @@
 import { FilterValuesType } from '../components/todo-list/TodoList';
 
-const ADD_TODO = 'ADD_TODO';
-const REMOVE_TODO = 'REMOVE_TODO';
-const SET_FILTER = 'SET_FILTER';
+export enum TODO_ACTION_TYPE {
+  ADD_TODO = 'ADD_TODO',
+  REMOVE_TODO = 'REMOVE_TODO',
+  SET_FILTER = 'SET_FILTER'
+}
 
-export type TodoListType = {
-  id: string
+
+export type TodoType = {
+  todoId: string
   title: string
   filter: FilterValuesType
 }
 
-export type TodoListStateType = {
-  todos: Array<TodoListType>
-}
+export type TodoStateType = Array<TodoType>;
 
 type RemoveTodoActionType = {
-  type: typeof REMOVE_TODO
+  type: TODO_ACTION_TYPE.REMOVE_TODO
   payload: {
     todoId: string
   }
 }
 
 type AddTodoActionType = {
-  type: typeof ADD_TODO
+  type: TODO_ACTION_TYPE.ADD_TODO
   payload: {
     title: string
     todoId: string
+    filter: FilterValuesType
   }
 }
 
 type SetFilterActionType = {
-  type: typeof SET_FILTER
+  type: TODO_ACTION_TYPE.SET_FILTER
   payload: {
     todoId: string
     filter: FilterValuesType
   }
 }
 
-export const addTodo = ( title: string, todoId: string ): AddTodoActionType => {
+export const AddTodo = ( title: string, todoId: string, filter: FilterValuesType = 'all' ): AddTodoActionType => {
   return {
-    type: ADD_TODO,
-    payload: { title, todoId: todoId }
+    type: TODO_ACTION_TYPE.ADD_TODO,
+    payload: { title, todoId, filter }
   };
 };
 
-export const removeTodo = ( todoId: string ): RemoveTodoActionType => {
+export const RemoveTodo = ( todoId: string ): RemoveTodoActionType => {
   return {
-    type: REMOVE_TODO,
+    type: TODO_ACTION_TYPE.REMOVE_TODO,
     payload: { todoId: todoId }
   };
 };
 
-export const setFilter = ( todoId: string, filter: FilterValuesType ): SetFilterActionType => {
+export const SetFilter = ( todoId: string, filter: FilterValuesType ): SetFilterActionType => {
   return {
-    type: SET_FILTER,
+    type: TODO_ACTION_TYPE.SET_FILTER,
     payload: {
       todoId,
       filter
@@ -63,25 +65,22 @@ export const setFilter = ( todoId: string, filter: FilterValuesType ): SetFilter
 
 type TodoReducerActionType = AddTodoActionType | RemoveTodoActionType | SetFilterActionType;
 
-export const todoReducer = ( state: TodoListStateType, action: TodoReducerActionType ): TodoListStateType => {
+export const todoReducer = ( state: TodoStateType, action: TodoReducerActionType ): TodoStateType => {
   switch ( action.type ) {
-    case 'ADD_TODO':
-      const newTodoList: TodoListType = {
-        id: action.payload.todoId,
-        title: action.payload.title,
-        filter: 'all'
-      };
-      return { ...state, todos: [ newTodoList, ...state.todos ] };
 
-    case REMOVE_TODO:
-      return { ...state, todos: state.todos.filter( todo => todo.id !== action.payload.todoId ) };
+    case TODO_ACTION_TYPE.ADD_TODO: {
+      return [ action.payload, ...state ];
+    }
 
-    case SET_FILTER:
-      const newTodos = [ ...state.todos ];
-      const todo = newTodos.find( t => t.id === action.payload.todoId );
+    case TODO_ACTION_TYPE.REMOVE_TODO:
+      return state.filter( todo => todo.todoId !== action.payload.todoId );
+
+    case TODO_ACTION_TYPE.SET_FILTER:
+      const newTodos = [ ...state ];
+      const todo = newTodos.find( t => t.todoId === action.payload.todoId );
       if ( todo ) {
-        todo.filter = 'active';
-        return { ...state, todos: newTodos };
+        todo.filter = action.payload.filter;
+        return newTodos;
       } else
         return state;
 

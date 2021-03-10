@@ -1,14 +1,14 @@
 import {
-  addTask,
-  addTodo,
-  changeTitle,
-  removeTask,
-  setIsDone,
+  AddTask,
+  AddTodo,
+  ChangeTaskTitle,
+  RemoveTask,
+  SetIsDone,
   taskReducer,
   TaskStateType
 } from './task-reducer';
 import { v1 } from 'uuid';
-import { removeTodo } from './todo-reducer';
+import { RemoveTodo } from './todo-reducer';
 
 const todoId_1 = v1();
 const todoId_2 = v1();
@@ -31,7 +31,7 @@ beforeEach( () => {
 
 test( 'Add task', () => {
   const newTitle: string = 'Title of taskId4';
-  const action = addTask( todoId_1, 'taskId4', newTitle );
+  const action = AddTask( todoId_1, 'taskId4', newTitle );
   const newState = taskReducer( state, action );
   expect( newState === state ).toBeFalsy();
   expect( newState[todoId_1].find( task => task.taskId === 'taskId4' ) ).not.toBeUndefined();
@@ -40,7 +40,7 @@ test( 'Add task', () => {
 } );
 
 test( 'Remove task', () => {
-  const action = removeTask( todoId_2, 'taskId1' );
+  const action = RemoveTask( todoId_2, 'taskId1' );
   const newState = taskReducer( state, action );
   expect( newState === state ).toBeFalsy();
   expect( newState[todoId_1] === state[todoId_1] ).toBeTruthy();
@@ -50,7 +50,7 @@ test( 'Remove task', () => {
 } );
 
 test( 'Set is done', () => {
-  const action = setIsDone( todoId_2, 'taskId2', false );
+  const action = SetIsDone( todoId_2, 'taskId2', false );
   const newState = taskReducer( state, action );
   expect( newState[todoId_2].find( t => t.taskId === 'taskId2' )?.isDone ).toBeFalsy();
   expect( newState[todoId_1].find( t => t.taskId === 'taskId2' )?.isDone ).toBeTruthy();
@@ -58,7 +58,7 @@ test( 'Set is done', () => {
 } );
 
 test( 'Change task title', () => {
-  const action = changeTitle( todoId_1, 'taskId1', 'Task new title' );
+  const action = ChangeTaskTitle( todoId_1, 'taskId1', 'Task new title' );
   const newState = taskReducer( state, action );
   // expect( state[todoId_1].find( t => t.taskId === 'taskId1' ) ).not.toBe( newState[todoId_1].find( t => t.taskId === 'taskId1' ) );
   expect( newState[todoId_1].find( t => t.taskId === 'taskId1' )?.title ).toBe( 'Task new title' );
@@ -68,14 +68,14 @@ test( 'Change task title', () => {
 
 test( 'Add todo', () => {
   const newTodoId = v1();
-  const action = addTodo( '', newTodoId );
+  const action = AddTodo( '', newTodoId );
   const newState = taskReducer( state, action );
   expect( newState[newTodoId] ).not.toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length + 1 );
 } );
 
 test( 'Remove todo', () => {
-  const action = removeTodo(todoId_1);
+  const action = RemoveTodo(todoId_1);
   const newState = taskReducer( state, action );
   expect( newState[todoId_1] ).toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length - 1 );

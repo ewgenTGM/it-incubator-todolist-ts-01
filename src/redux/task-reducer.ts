@@ -37,7 +37,7 @@ type AddTodoActionType = {
   }
 }
 
-export const addTodo = ( title: string, todoId: string ): AddTodoActionType => ( {
+export const AddTodo = ( title: string, todoId: string ): AddTodoActionType => ( {
   type: ADD_TODO,
   payload: {
     todoId, title
@@ -50,16 +50,18 @@ type AddTaskActionType = {
   payload: {
     todoId: string,
     taskId: string,
-    title: string
+    title: string,
+    isDone: boolean
   }
 }
 
-export const addTask = ( todoId: string, taskId: string, title: string ): AddTaskActionType => ( {
+export const AddTask = ( todoId: string, taskId: string, title: string, isDone: boolean = false ): AddTaskActionType => ( {
   type: ADD_TASK,
   payload: {
     todoId,
     taskId,
-    title
+    title,
+    isDone
   }
 } );
 
@@ -71,7 +73,7 @@ type RemoveTaskActionType = {
   }
 }
 
-export const removeTask = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
+export const RemoveTask = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
   type: REMOVE_TASK,
   payload: {
     todoId,
@@ -88,7 +90,7 @@ type SetIsDoneActionType = {
   }
 }
 
-export const setIsDone = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
+export const SetIsDone = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
   type: SET_IS_DONE,
   payload: {
     todoId,
@@ -106,7 +108,7 @@ type ChangeTitleActionType = {
   }
 }
 
-export const changeTitle = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
+export const ChangeTaskTitle = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
   type: CHANGE_TITLE,
   payload: {
     todoId,
