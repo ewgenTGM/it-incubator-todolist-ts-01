@@ -46,10 +46,11 @@ export const TodoList = ( props: TodoListPropsType ) => {
             key={ task.taskId }
             className={ 'task ' + ( task.isDone ? 'done' : '' ) }>
           <Tooltip title={ 'Remove task' }>
-            <IconButton style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }>
+            <IconButton
+                style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }
+                onClick={ () => props.removeTask( task.taskId, props.id ) }>
               <DeleteIcon
                   fontSize={ 'small' }
-                  onClick={ () => props.removeTask( task.taskId, props.id ) }
               />
             </IconButton>
           </Tooltip>
@@ -101,10 +102,11 @@ export const TodoList = ( props: TodoListPropsType ) => {
           style={ { padding: '15px', margin: '20px', position: 'relative', width: '300px' } }>
         <Tooltip
             title={ 'Remove todo' }>
-          <IconButton style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }>
+          <IconButton
+              style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }
+              onClick={ () => props.removeTodoList( props.id ) }>
             <DeleteIcon
                 fontSize={ 'default' }
-                onClick={ () => props.removeTodoList( props.id ) }
                 className={ 'delete_btn' }
             />
           </IconButton>

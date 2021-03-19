@@ -1,4 +1,5 @@
 import { FilterValuesType } from '../components/todo-list/TodoList';
+import { todosInitialState } from './initialState';
 
 export enum TODO_ACTION_TYPE {
   ADD_TODO = 'ADD_TODO',
@@ -65,7 +66,7 @@ export const SetFilter = ( todoId: string, filter: FilterValuesType ): SetFilter
 
 type TodoReducerActionType = AddTodoActionType | RemoveTodoActionType | SetFilterActionType;
 
-export const todoReducer = ( state: TodoStateType, action: TodoReducerActionType ): TodoStateType => {
+export const todoReducer = ( state: TodoStateType = todosInitialState, action: TodoReducerActionType ): TodoStateType => {
   switch ( action.type ) {
 
     case TODO_ACTION_TYPE.ADD_TODO: {

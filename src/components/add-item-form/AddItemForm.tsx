@@ -2,7 +2,7 @@ import React, { CSSProperties, useState } from 'react';
 import { Box, Button, TextField } from '@material-ui/core';
 
 
-type AddItemFormType = {
+type AddItemFormPropsType = {
   onSubmit: ( text: string ) => void
   inputPlaceholder?: string
   buttonLabel: string
@@ -10,8 +10,7 @@ type AddItemFormType = {
   backgroundStyle?: CSSProperties
 }
 
-export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
-
+export const AddItemForm: React.VFC<AddItemFormPropsType> = React.memo( props => {
   const {
     onSubmit,
     inputPlaceholder,
@@ -19,6 +18,8 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
     defaultWidth,
     backgroundStyle
   } = props;
+
+  console.log( 'Отрисовка AddItemForm');
 
   const [ text, setText ] = useState<string>( '' );
   const [ error, setError ] = useState<string | null>( null );
@@ -75,4 +76,4 @@ export const AddItemForm: React.VFC<AddItemFormType> = ( props ) => {
         </Button>
       </Box>
   );
-};
+} );

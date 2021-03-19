@@ -1,9 +1,14 @@
-const ADD_TASK = 'ADD_TASK';
-const ADD_TODO = 'ADD_TODO';
-const REMOVE_TODO = 'REMOVE_TODO';
-const REMOVE_TASK = 'REMOVE_TASK';
-const SET_IS_DONE = 'SET_IS_DONE';
-const CHANGE_TITLE = 'CHANGE_TITLE';
+import { tasksInitialState } from './initialState';
+
+export enum TASK_ACTION_TYPE {
+  ADD_TASK = 'ADD_TASK',
+  ADD_TODO_TASK_ARRAY = 'ADD_TODO_TASK_ARRAY',
+  REMOVE_TODO_TASK_ARRAY = 'REMOVE_TODO_TASK_ARRAY',
+  REMOVE_TASK = 'REMOVE_TASK',
+  SET_IS_DONE = 'SET_IS_DONE',
+  CHANGE_TITLE = 'CHANGE_TITLE'
+}
+
 
 export type TaskType = {
   taskId: string
@@ -15,30 +20,30 @@ export type TaskStateType = {
   [key: string]: Array<TaskType>
 }
 
-type RemoveTodoActionType = {
-  type: typeof REMOVE_TODO
+type RemoveTodoTaskArrayActionType = {
+  type: TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY
   payload: {
     todoId: string
   }
 }
 
-export const removeTodo = ( todoId: string ): RemoveTodoActionType => ( {
-  type: REMOVE_TODO,
+export const removeTodoTaskArray = ( todoId: string ): RemoveTodoTaskArrayActionType => ( {
+  type: TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY,
   payload: {
     todoId
   }
 } );
 
-type AddTodoActionType = {
-  type: typeof ADD_TODO
+type AddTodoTaskArrayActionType = {
+  type: TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY
   payload: {
     title: string
     todoId: string
   }
 }
 
-export const AddTodo = ( title: string, todoId: string ): AddTodoActionType => ( {
-  type: ADD_TODO,
+export const AddTodoTaskArray = ( title: string, todoId: string ): AddTodoTaskArrayActionType => ( {
+  type: TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY,
   payload: {
     todoId, title
   }
@@ -46,7 +51,7 @@ export const AddTodo = ( title: string, todoId: string ): AddTodoActionType => (
 
 
 type AddTaskActionType = {
-  type: typeof ADD_TASK,
+  type: TASK_ACTION_TYPE.ADD_TASK,
   payload: {
     todoId: string,
     taskId: string,
@@ -56,7 +61,7 @@ type AddTaskActionType = {
 }
 
 export const AddTask = ( todoId: string, taskId: string, title: string, isDone: boolean = false ): AddTaskActionType => ( {
-  type: ADD_TASK,
+  type: TASK_ACTION_TYPE.ADD_TASK,
   payload: {
     todoId,
     taskId,
@@ -66,7 +71,7 @@ export const AddTask = ( todoId: string, taskId: string, title: string, isDone: 
 } );
 
 type RemoveTaskActionType = {
-  type: typeof REMOVE_TASK,
+  type: TASK_ACTION_TYPE.REMOVE_TASK,
   payload: {
     todoId: string
     taskId: string
@@ -74,7 +79,7 @@ type RemoveTaskActionType = {
 }
 
 export const RemoveTask = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
-  type: REMOVE_TASK,
+  type: TASK_ACTION_TYPE.REMOVE_TASK,
   payload: {
     todoId,
     taskId
@@ -82,7 +87,7 @@ export const RemoveTask = ( todoId: string, taskId: string ): RemoveTaskActionTy
 } );
 
 type SetIsDoneActionType = {
-  type: typeof SET_IS_DONE,
+  type: TASK_ACTION_TYPE.SET_IS_DONE,
   payload: {
     todoId: string,
     taskId: string,
@@ -91,7 +96,7 @@ type SetIsDoneActionType = {
 }
 
 export const SetIsDone = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
-  type: SET_IS_DONE,
+  type: TASK_ACTION_TYPE.SET_IS_DONE,
   payload: {
     todoId,
     taskId,
@@ -100,7 +105,7 @@ export const SetIsDone = ( todoId: string, taskId: string, isDone: boolean ): Se
 } );
 
 type ChangeTitleActionType = {
-  type: typeof CHANGE_TITLE,
+  type: TASK_ACTION_TYPE.CHANGE_TITLE,
   payload: {
     todoId: string,
     taskId: string,
@@ -109,7 +114,7 @@ type ChangeTitleActionType = {
 }
 
 export const ChangeTaskTitle = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
-  type: CHANGE_TITLE,
+  type: TASK_ACTION_TYPE.CHANGE_TITLE,
   payload: {
     todoId,
     taskId,
@@ -118,24 +123,24 @@ export const ChangeTaskTitle = ( todoId: string, taskId: string, title: string )
 } );
 
 type TaskReducerActionType =
-    AddTodoActionType
+    AddTodoTaskArrayActionType
     | AddTaskActionType
     | RemoveTaskActionType
     | SetIsDoneActionType
     | ChangeTitleActionType
-    | RemoveTodoActionType;
+    | RemoveTodoTaskArrayActionType;
 
-export const taskReducer = ( state: TaskStateType, action: TaskReducerActionType ): TaskStateType => {
+export const taskReducer = ( state: TaskStateType = tasksInitialState, action: TaskReducerActionType ): TaskStateType => {
   switch ( action.type ) {
-    case ADD_TODO: {
+    case TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY: {
       return { ...state, [action.payload.todoId]: [] };
     }
-    case REMOVE_TODO: {
-      const newState = {...state}
+    case TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY: {
+      const newState = { ...state };
       delete newState[action.payload.todoId];
       return { ...newState };
     }
-    case ADD_TASK: {
+    case TASK_ACTION_TYPE.ADD_TASK: {
       const task: TaskType = {
         taskId: action.payload.taskId,
         title: action.payload.title,
@@ -146,48 +151,48 @@ export const taskReducer = ( state: TaskStateType, action: TaskReducerActionType
         [action.payload.todoId]: [ task, ...state[action.payload.todoId] ]
       };
     }
-    case REMOVE_TASK: {
+    case TASK_ACTION_TYPE.REMOVE_TASK: {
       return {
         ...state,
         [action.payload.todoId]: state[action.payload.todoId].filter( task => task.taskId !== action.payload.taskId )
       };
     }
-      // case SET_IS_DONE: {
-      //   const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
-      //   const task = tasks.find( t => t.taskId === action.payload.taskId );
-      //   if ( task ) {
-      //     task.isDone = action.payload.isDone;
-      //     return { ...state, [action.payload.todoId]: tasks };
-      //   }
-      //   return state;
-      // }
-      // case CHANGE_TITLE: {
-      //   const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
-      //   const task = tasks.find( t => t.taskId === action.payload.taskId );
-      //   if ( task ) {
-      //     task.title = action.payload.title;
-      //     return { ...state, [action.payload.todoId]: tasks };
-      //   }
-      //   return state;
-      // }
-    case SET_IS_DONE: {
-      const stateCopy = { ...state };
-      const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+    case TASK_ACTION_TYPE.SET_IS_DONE: {
+      const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
+      const task = tasks.find( t => t.taskId === action.payload.taskId );
       if ( task ) {
         task.isDone = action.payload.isDone;
-        return stateCopy;
+        return { ...state, [action.payload.todoId]: tasks };
       }
       return state;
     }
-    case CHANGE_TITLE: {
-      const stateCopy = { ...state };
-      const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+    case TASK_ACTION_TYPE.CHANGE_TITLE: {
+      const tasks = state[action.payload.todoId].map( task => ( { ...task } ) );
+      const task = tasks.find( t => t.taskId === action.payload.taskId );
       if ( task ) {
         task.title = action.payload.title;
-        return stateCopy;
+        return { ...state, [action.payload.todoId]: tasks };
       }
       return state;
     }
+      // case TASK_ACTION_TYPE.SET_IS_DONE: {
+      //   const stateCopy = { ...state };
+      //   const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+      //   if ( task ) {
+      //     task.isDone = action.payload.isDone;
+      //     return stateCopy;
+      //   }
+      //   return state;
+      // }
+      // case TASK_ACTION_TYPE.CHANGE_TITLE: {
+      //   const stateCopy = { ...state };
+      //   const task = stateCopy[action.payload.todoId].find( t => t.taskId === action.payload.taskId );
+      //   if ( task ) {
+      //     task.title = action.payload.title;
+      //     return stateCopy;
+      //   }
+      //   return state;
+      // }
     default: {
       return state;
     }

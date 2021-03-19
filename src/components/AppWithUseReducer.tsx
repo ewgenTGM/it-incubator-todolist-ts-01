@@ -6,64 +6,18 @@ import { FilterValuesType, TaskType, TodoList } from './todo-list/TodoList';
 import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AddTodo, RemoveTodo, SetFilter, todoReducer, TodoStateType } from '../redux/todo-reducer';
-import { AddTask, ChangeTaskTitle, RemoveTask, SetIsDone, taskReducer, TaskStateType } from '../redux/task-reducer';
+import {
+  AddTask,
+  AddTodoTaskArray,
+  ChangeTaskTitle,
+  RemoveTask,
+  SetIsDone,
+  taskReducer,
+  TaskStateType
+} from '../redux/task-reducer';
+import { tasksInitialState, todosInitialState } from '../redux/initialState';
 
 export const AppWithUseReducer = () => {
-
-      const todoListId1 = v1();
-      const todoListId2 = v1();
-
-      const todosInitialState: TodoStateType = [
-        { todoId: todoListId1, title: 'Learn JavaScript', filter: 'all' },
-        { todoId: todoListId2, title: 'Learn React', filter: 'all' } ];
-
-
-      const tasksInitialState: TaskStateType = {
-        [todoListId1]: [
-          {
-            taskId: v1(),
-            title: 'Открыть сайт LearnJS.ru',
-            isDone: true
-          },
-          {
-            taskId: v1(),
-            title: 'Пройти весь курс.',
-            isDone: false
-          },
-          {
-            taskId: v1(),
-            title: 'Ты прекрасен.',
-            isDone: false
-          },
-          {
-            taskId: v1(),
-            title: 'Можно по пиву.',
-            isDone: true
-          }
-        ],
-        [todoListId2]: [
-          {
-            taskId: v1(),
-            title: 'Открыть сайт React.ru',
-            isDone: true
-          },
-          {
-            taskId: v1(),
-            title: 'Ничего не понять.',
-            isDone: false
-          },
-          {
-            taskId: v1(),
-            title: 'Ты дно.',
-            isDone: false
-          },
-          {
-            taskId: v1(),
-            title: 'Боль.',
-            isDone: true
-          }
-        ]
-      };
 
 
       const [ todos, todosDispatch ] = useReducer( todoReducer, todosInitialState );
@@ -84,7 +38,7 @@ export const AppWithUseReducer = () => {
       const addTodoList = ( title: string ) => {
         const newTodoListId = v1();
         todosDispatch( AddTodo( title, newTodoListId ) );
-        tasksDispatch( AddTodo( title, newTodoListId ) );
+        tasksDispatch( AddTodoTaskArray( title, newTodoListId ) );
       };
 
       const removeTask = ( taskId: string, todoListId: string ) => {

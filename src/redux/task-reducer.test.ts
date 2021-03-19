@@ -1,8 +1,8 @@
 import {
   AddTask,
-  AddTodo,
+  AddTodoTaskArray,
   ChangeTaskTitle,
-  RemoveTask,
+  RemoveTask, removeTodoTaskArray,
   SetIsDone,
   taskReducer,
   TaskStateType
@@ -54,28 +54,28 @@ test( 'Set is done', () => {
   const newState = taskReducer( state, action );
   expect( newState[todoId_2].find( t => t.taskId === 'taskId2' )?.isDone ).toBeFalsy();
   expect( newState[todoId_1].find( t => t.taskId === 'taskId2' )?.isDone ).toBeTruthy();
-  // expect( state[todoId_2].find( t => t.taskId === 'taskId2' ) ).not.toBe( newState[todoId_2].find( t => t.taskId === 'taskId2' ) );
+  expect( state[todoId_2].find( t => t.taskId === 'taskId2' ) ).not.toBe( newState[todoId_2].find( t => t.taskId === 'taskId2' ) );
 } );
 
 test( 'Change task title', () => {
   const action = ChangeTaskTitle( todoId_1, 'taskId1', 'Task new title' );
   const newState = taskReducer( state, action );
-  // expect( state[todoId_1].find( t => t.taskId === 'taskId1' ) ).not.toBe( newState[todoId_1].find( t => t.taskId === 'taskId1' ) );
+  expect( state[todoId_1].find( t => t.taskId === 'taskId1' ) === newState[todoId_1].find( t => t.taskId === 'taskId1' ) ).toBeFalsy();
   expect( newState[todoId_1].find( t => t.taskId === 'taskId1' )?.title ).toBe( 'Task new title' );
   expect( newState[todoId_2].find( t => t.taskId === 'taskId1' )?.title ).toBe( 'Title of taskId1' );
-  // expect( state[todoId_1].find( t => t.taskId === 'taskId1' )?.title ).toBe( 'Title of taskId1' );
+  expect( state[todoId_1].find( t => t.taskId === 'taskId1' )?.title ).toBe( 'Title of taskId1' );
 } );
 
 test( 'Add todo', () => {
   const newTodoId = v1();
-  const action = AddTodo( '', newTodoId );
+  const action = AddTodoTaskArray( '', newTodoId );
   const newState = taskReducer( state, action );
   expect( newState[newTodoId] ).not.toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length + 1 );
 } );
 
 test( 'Remove todo', () => {
-  const action = RemoveTodo(todoId_1);
+  const action = removeTodoTaskArray( todoId_1 );
   const newState = taskReducer( state, action );
   expect( newState[todoId_1] ).toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length - 1 );
