@@ -8,18 +8,25 @@ export type TaskType = {
   title: string
   isDone: boolean
 }
+
 export type TaskPropsType = {
   todoId: string
   task: TaskType
-  removeTask: ( taskId: string ) => void
+  removeTask: ( todoId: string, taskId: string ) => void
   changeTaskLabel: ( taskId: string, value: string, todoId: string ) => void
-  setIsDone: ( taskId: string, value: boolean, todoId: string ) => void
+  // setIsDone: ( taskId: string, value: boolean, todoId: string ) => void
+  setIsDone: ( taskId: string, value: boolean ) => void
 }
 export const Task: React.FC<TaskPropsType> = React.memo( props => {
+  const { task, todoId, setIsDone, changeTaskLabel } = props;
+  console.log( 'Отрисовка Task c title', task.title );
 
-  const { task, removeTask, todoId, setIsDone, changeTaskLabel } = props;
-
-  console.log( 'Отрисовка Task' );
+  const removeTask = () => {
+    if ( !window.confirm( `Are You sure want to remove <${ task.title }> task?` ) ) {
+      return;
+    }
+    props.removeTask( todoId, task.taskId );
+  };
 
   return (
       <div
@@ -28,7 +35,7 @@ export const Task: React.FC<TaskPropsType> = React.memo( props => {
         <Tooltip title={ 'Remove task' }>
           <IconButton
               style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }
-              onClick={ () => removeTask( task.taskId ) }>
+              onClick={ removeTask }>
             <DeleteIcon
                 fontSize={ 'small' }
             />
@@ -38,7 +45,7 @@ export const Task: React.FC<TaskPropsType> = React.memo( props => {
             color={ 'primary' }
             readOnly={ true }
             checked={ task.isDone }
-            onChange={ ( e ) => {setIsDone( task.taskId, e.currentTarget.checked, todoId );} }
+            onChange={ ( e ) => setIsDone( task.taskId, e.currentTarget.checked ) }
         />
         <EditableSpan
             initialText={ task.title }

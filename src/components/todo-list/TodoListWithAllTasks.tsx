@@ -26,16 +26,10 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
     todoId,
     label,
     tasks,
-    currentFilter,
-    setFilter
+    currentFilter
   } = props;
 
-  console.log( 'Отрисовка TodoListWithAllTasks' );
-
-
-  const removeTodoList = useCallback( () => {
-    props.removeTodoList( todoId );
-  }, [ todoId ] );
+  console.log( 'Отрисовка TodoListWithAllTasks c title', label );
 
   let filteredTasks: Array<TaskType>;
 
@@ -50,11 +44,17 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
       filteredTasks = tasks.filter( t => t.isDone );
       break;
   }
-
-  const setIsDone = useCallback( props.setIsDone, [ todoId, props.setIsDone ] );
-  const addTask = useCallback( props.addTask, [ todoId, props.addTask ] );
-  const removeTask = useCallback( ( taskId: string ) => props.removeTask( todoId, taskId ), [ todoId ] );
-  const changeTaskLabel = useCallback( props.changeTaskLabel, [ todoId, props.changeTaskLabel ] );
+  const removeTodoList = () => {
+    if ( !window.confirm( `Are You sure want to remove <${ label }> Todo list?` ) ) {
+      return;
+    }
+    props.removeTodoList( todoId );
+  };
+  const setFilter = useCallback( ( filter: FilterValuesType ) => props.setFilter( filter, todoId ), [ todoId ] );
+  const setIsDone = useCallback( ( taskId: string, value: boolean ) => props.setIsDone( taskId, value, todoId ), [ todoId ] );
+  const addTask = useCallback( ( text ) => props.addTask( todoId, text ), [ todoId ] );
+  const changeTaskLabel = useCallback( props.changeTaskLabel, [] );
+  const removeTask = useCallback( props.removeTask, [] );
 
   const mappedTasks = filteredTasks.map( task => <Task
           todoId={ todoId }
@@ -75,21 +75,21 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'all' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'all', todoId ) }>
+          onClick={ () => setFilter( 'all' ) }>
         All
       </Button>
       <Button
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'active' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'active', todoId ) }>
+          onClick={ () => setFilter( 'active' ) }>
         Active
       </Button>
       <Button
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'completed' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'completed', todoId ) }>
+          onClick={ () => setFilter( 'completed' ) }>
         Completed
       </Button>
     </Box>
@@ -112,7 +112,7 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
         </Tooltip>
         <div className='todo_title'>{ label }</div>
         <AddItemForm
-            onSubmit={ text => addTask( todoId, text ) }
+            onSubmit={ addTask }
             buttonLabel={ 'Add task' }
             inputPlaceholder={ 'Input task' }/>
         { filterButtons }

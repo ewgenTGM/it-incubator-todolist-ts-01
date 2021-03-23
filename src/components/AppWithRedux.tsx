@@ -31,13 +31,10 @@ export const AppWithRedux = React.memo( () => {
     dispatch( SetFilter( todoId, filter ) );
   }, [] );
 
-  const removeTodoList = ( todoId: string ) => {
-    if ( !window.confirm( `Are You sure want to remove <${ todos.find( tl => tl.todoId === todoId )?.title }> Todo list?` ) ) {
-      return;
-    }
+  const removeTodoList = useCallback( ( todoId: string ) => {
     dispatch( RemoveTodo( todoId ) );
     dispatch( RemoveTodoTaskArray( todoId ) );
-  };
+  }, [] );
 
   const addTodoList = useCallback( ( title: string ) => {
     const newTodoId = v1();
@@ -46,19 +43,15 @@ export const AppWithRedux = React.memo( () => {
   }, [] );
 
   const removeTask = useCallback( ( todoId: string, taskId: string ) => {
-    console.log( todoId, taskId );
-    if ( !window.confirm( `Are You sure want to remove <${ tasks[todoId].find( t => t.taskId === taskId )?.title }> task?` ) ) {
-      return;
-    }
     dispatch( RemoveTask( todoId, taskId ) );
   }, [] );
 
-  const addTask = (todoId: string, newTaskText: string ) => {
+  const addTask = useCallback( ( todoId: string, newTaskText: string ) => {
     if ( newTaskText.trim() === '' ) {
       return;
     }
     dispatch( AddTask( todoId, v1(), newTaskText ) );
-  };
+  }, [] );
 
   const setIsDone = useCallback( ( taskId: string, value: boolean, todoId: string ) => {
     dispatch( SetIsDone( todoId, taskId, value ) );
