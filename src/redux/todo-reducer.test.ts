@@ -17,7 +17,7 @@ beforeEach( () => {
 test( 'Add todolist', () => {
   const newTodoTitle = 'TEST TODO LIST TITLE';
   const newTodoId = v1();
-  const newState = todoReducer( state, AddTodo( newTodoTitle, newTodoId ) );
+  const newState = todoReducer( state, AddTodo( newTodoId, newTodoTitle  ) );
   expect( state ).not.toBe( newState );
   expect( state ).not.toBe( newState );
   expect( newState.length ).toBe( state.length + 1 );

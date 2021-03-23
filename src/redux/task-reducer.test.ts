@@ -2,7 +2,7 @@ import {
   AddTask,
   AddTodoTaskArray,
   ChangeTaskTitle,
-  RemoveTask, removeTodoTaskArray,
+  RemoveTask, RemoveTodoTaskArray,
   SetIsDone,
   taskReducer,
   TaskStateType
@@ -68,14 +68,14 @@ test( 'Change task title', () => {
 
 test( 'Add todo', () => {
   const newTodoId = v1();
-  const action = AddTodoTaskArray( '', newTodoId );
+  const action = AddTodoTaskArray( newTodoId, '' );
   const newState = taskReducer( state, action );
   expect( newState[newTodoId] ).not.toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length + 1 );
 } );
 
 test( 'Remove todo', () => {
-  const action = removeTodoTaskArray( todoId_1 );
+  const action = RemoveTodoTaskArray( todoId_1 );
   const newState = taskReducer( state, action );
   expect( newState[todoId_1] ).toBeUndefined();
   expect( Object.keys( newState ).length ).toBe( Object.keys( state ).length - 1 );

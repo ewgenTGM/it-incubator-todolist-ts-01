@@ -6,7 +6,7 @@ type EditableSpanPropType = {
   callback: ( text: string ) => void
 }
 
-export const EditableSpan: React.VFC<EditableSpanPropType> = ( props ) => {
+export const EditableSpan: React.VFC<EditableSpanPropType> = React.memo( ( props ) => {
 
   const [ editMode, setEditMode ] = useState<boolean>( false );
   const [ text, setText ] = useState<string>( props.initialText );
@@ -47,4 +47,4 @@ export const EditableSpan: React.VFC<EditableSpanPropType> = ( props ) => {
       onDoubleClick={ setEditModeOn }>{ text }</span>;
 
   return editMode ? input : span;
-};
+} );

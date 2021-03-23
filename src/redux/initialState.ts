@@ -2,16 +2,16 @@ import { v1 } from 'uuid';
 import { TodoStateType } from './todo-reducer';
 import { TaskStateType } from './task-reducer';
 
-const todoListId1 = v1();
-const todoListId2 = v1();
+const todoId1 = v1();
+const todoId2 = v1();
 
 export const todosInitialState: TodoStateType = [
-  { todoId: todoListId1, title: 'Learn JavaScript', filter: 'all' },
-  { todoId: todoListId2, title: 'Learn React', filter: 'all' } ];
+  { todoId: todoId1, title: 'Learn JavaScript', filter: 'all' },
+  { todoId: todoId2, title: 'Learn React', filter: 'all' } ];
 
 
 export const tasksInitialState: TaskStateType = {
-  [todoListId1]: [
+  [todoId1]: [
     {
       taskId: v1(),
       title: 'Открыть сайт LearnJS.ru',
@@ -33,7 +33,7 @@ export const tasksInitialState: TaskStateType = {
       isDone: true
     }
   ],
-  [todoListId2]: [
+  [todoId2]: [
     {
       taskId: v1(),
       title: 'Открыть сайт React.ru',

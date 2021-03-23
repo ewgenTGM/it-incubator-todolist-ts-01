@@ -12,16 +12,16 @@ export type TaskType = {
 }
 
 export type TodoListPropsType = {
-  id: string
+  todoId: string
   label: string
   tasks: Array<TaskType>
   currentFilter: FilterValuesType
-  addTask: ( text: string, todoListId: string ) => void
-  removeTask: ( id: string, todoListId: string ) => void
-  setFilter: ( filter: FilterValuesType, todoListId: string ) => void
-  setIsDone: ( id: string, value: boolean, todoListId: string ) => void
-  changeTaskLabel: ( id: string, value: string, todoListId: string ) => void
-  removeTodoList: ( todoListId: string ) => void
+  addTask: ( text: string, todoId: string ) => void
+  removeTask: ( taskId: string, todoId: string ) => void
+  setFilter: ( filter: FilterValuesType, todoId: string ) => void
+  setIsDone: ( taskId: string, value: boolean, todoId: string ) => void
+  changeTaskLabel: ( taskId: string, value: string, todoId: string ) => void
+  removeTodoList: ( todoId: string ) => void
 }
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
@@ -29,17 +29,17 @@ export type FilterValuesType = 'all' | 'active' | 'completed';
 export const TodoList = ( props: TodoListPropsType ) => {
 
   const addTask = ( text: string ) => {
-    props.addTask( text, props.id );
+    props.addTask( text, props.todoId );
   };
   const changeFilter = ( filter: FilterValuesType ) => {
-    props.setFilter( filter, props.id );
+    props.setFilter( filter, props.todoId );
   };
 
 
   const mappedTasks = props.tasks.map( task => {
-    const setIsDone = ( event: ChangeEvent<HTMLInputElement> ) => props.setIsDone( task.taskId, event.currentTarget.checked, props.id );
+    const setIsDone = ( event: ChangeEvent<HTMLInputElement> ) => props.setIsDone( task.taskId, event.currentTarget.checked, props.todoId );
     const changeTaskLabel = ( text: string ) => {
-      props.changeTaskLabel( task.taskId, text, props.id );
+      props.changeTaskLabel( task.taskId, text, props.todoId );
     };
     return (
         <div
@@ -48,7 +48,7 @@ export const TodoList = ( props: TodoListPropsType ) => {
           <Tooltip title={ 'Remove task' }>
             <IconButton
                 style={ { cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0' } }
-                onClick={ () => props.removeTask( task.taskId, props.id ) }>
+                onClick={ () => props.removeTask( task.taskId, props.todoId ) }>
               <DeleteIcon
                   fontSize={ 'small' }
               />
@@ -104,7 +104,7 @@ export const TodoList = ( props: TodoListPropsType ) => {
             title={ 'Remove todo' }>
           <IconButton
               style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }
-              onClick={ () => props.removeTodoList( props.id ) }>
+              onClick={ () => props.removeTodoList( props.todoId ) }>
             <DeleteIcon
                 fontSize={ 'default' }
                 className={ 'delete_btn' }

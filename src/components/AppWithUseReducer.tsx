@@ -28,24 +28,24 @@ export const AppWithUseReducer = () => {
         todosDispatch( SetFilter( todoId, filter ) );
       };
 
-      const removeTodoList = ( todoListId: string ) => {
-        if ( !window.confirm( `Are You sure want to remove <${ todos.find( tl => tl.todoId === todoListId )?.title }> Todo list?` ) ) {
+      const removeTodoList = ( todoId: string ) => {
+        if ( !window.confirm( `Are You sure want to remove <${ todos.find( tl => tl.todoId === todoId )?.title }> Todo list?` ) ) {
           return;
         }
-        todosDispatch( RemoveTodo( todoListId ) );
+        todosDispatch( RemoveTodo( todoId ) );
       };
 
       const addTodoList = ( title: string ) => {
-        const newTodoListId = v1();
-        todosDispatch( AddTodo( title, newTodoListId ) );
-        tasksDispatch( AddTodoTaskArray( title, newTodoListId ) );
+        const newTodoId = v1();
+        todosDispatch( AddTodo( title, newTodoId ) );
+        tasksDispatch( AddTodoTaskArray( title, newTodoId ) );
       };
 
-      const removeTask = ( taskId: string, todoListId: string ) => {
-        if ( !window.confirm( `Are You sure want to remove <${ tasks[todoListId].find( t => t.taskId === taskId )?.title }> task?` ) ) {
+      const removeTask = ( taskId: string, todoId: string ) => {
+        if ( !window.confirm( `Are You sure want to remove <${ tasks[todoId].find( t => t.taskId === taskId )?.title }> task?` ) ) {
           return;
         }
-        tasksDispatch( RemoveTask( todoListId, taskId ) );
+        tasksDispatch( RemoveTask( todoId, taskId ) );
       };
 
       const addTask = ( newTaskText: string, todoId: string ) => {
@@ -81,7 +81,7 @@ export const AppWithUseReducer = () => {
         return (
             <TodoList
                 key={ todoList.todoId }
-                id={ todoList.todoId }
+                todoId={ todoList.todoId }
                 label={ todoList.title }
                 tasks={ tasksForTodoList }
                 addTask={ addTask }

@@ -26,8 +26,8 @@ type RemoveTodoActionType = {
 type AddTodoActionType = {
   type: TODO_ACTION_TYPE.ADD_TODO
   payload: {
-    title: string
     todoId: string
+    title: string
     filter: FilterValuesType
   }
 }
@@ -40,10 +40,10 @@ type SetFilterActionType = {
   }
 }
 
-export const AddTodo = ( title: string, todoId: string, filter: FilterValuesType = 'all' ): AddTodoActionType => {
+export const AddTodo = ( todoId: string, title: string, filter: FilterValuesType = 'all' ): AddTodoActionType => {
   return {
     type: TODO_ACTION_TYPE.ADD_TODO,
-    payload: { title, todoId, filter }
+    payload: { todoId, title, filter }
   };
 };
 

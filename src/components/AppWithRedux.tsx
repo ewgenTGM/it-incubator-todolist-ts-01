@@ -10,7 +10,7 @@ import {
   AddTask,
   AddTodoTaskArray,
   ChangeTaskTitle,
-  RemoveTask,
+  RemoveTask, RemoveTodoTaskArray,
   SetIsDone,
   TaskStateType
 } from '../redux/task-reducer';
@@ -23,53 +23,56 @@ export const AppWithRedux = React.memo( () => {
   console.log( 'Отрисовка AppWithRedux' );
 
   const dispatch = useDispatch();
+
   const todos = useSelector<RootStateType, TodoStateType>( state => state.todos );
   const tasks = useSelector<RootStateType, TaskStateType>( state => state.tasks );
 
-  const setFilter = ( filter: FilterValuesType, todoId: string ) => {
+  const setFilter = useCallback( ( filter: FilterValuesType, todoId: string ) => {
     dispatch( SetFilter( todoId, filter ) );
-  };
+  }, [] );
 
-  const removeTodoList = ( todoListId: string ) => {
-    if ( !window.confirm( `Are You sure want to remove <${ todos.find( tl => tl.todoId === todoListId )?.title }> Todo list?` ) ) {
+  const removeTodoList = ( todoId: string ) => {
+    if ( !window.confirm( `Are You sure want to remove <${ todos.find( tl => tl.todoId === todoId )?.title }> Todo list?` ) ) {
       return;
     }
-    dispatch( RemoveTodo( todoListId ) );
+    dispatch( RemoveTodo( todoId ) );
+    dispatch( RemoveTodoTaskArray( todoId ) );
   };
 
   const addTodoList = useCallback( ( title: string ) => {
-    const newTodoListId = v1();
-    dispatch( AddTodo( title, newTodoListId ) );
-    dispatch( AddTodoTaskArray( title, newTodoListId ) );
+    const newTodoId = v1();
+    dispatch( AddTodo( newTodoId, title ) );
+    dispatch( AddTodoTaskArray( newTodoId, title ) );
   }, [] );
 
-  const removeTask = ( taskId: string, todoListId: string ) => {
-    if ( !window.confirm( `Are You sure want to remove <${ tasks[todoListId].find( t => t.taskId === taskId )?.title }> task?` ) ) {
+  const removeTask = useCallback( ( todoId: string, taskId: string ) => {
+    console.log( todoId, taskId );
+    if ( !window.confirm( `Are You sure want to remove <${ tasks[todoId].find( t => t.taskId === taskId )?.title }> task?` ) ) {
       return;
     }
-    dispatch( RemoveTask( todoListId, taskId ) );
-  };
+    dispatch( RemoveTask( todoId, taskId ) );
+  }, [] );
 
-  const addTask = useCallback( ( newTaskText: string, todoId: string ) => {
+  const addTask = (todoId: string, newTaskText: string ) => {
     if ( newTaskText.trim() === '' ) {
       return;
     }
     dispatch( AddTask( todoId, v1(), newTaskText ) );
+  };
+
+  const setIsDone = useCallback( ( taskId: string, value: boolean, todoId: string ) => {
+    dispatch( SetIsDone( todoId, taskId, value ) );
   }, [] );
 
-  const setIsDone = ( taskId: string, value: boolean, todoId: string ) => {
-    dispatch( SetIsDone( todoId, taskId, value ) );
-  };
-
-  const changeTaskTitle = ( taskId: string, value: string, todoId: string ) => {
+  const changeTaskTitle = useCallback( ( taskId: string, value: string, todoId: string ) => {
     dispatch( ChangeTaskTitle( todoId, taskId, value ) );
-  };
+  }, [] );
 
   const mappedTodoLists = todos.map( todoList => {
     return (
         <TodoListWithAllTasks
             key={ todoList.todoId }
-            id={ todoList.todoId }
+            todoId={ todoList.todoId }
             label={ todoList.title }
             tasks={ tasks[todoList.todoId] }
             addTask={ addTask }

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useCallback, useState } from 'react';
 import { Box, Button, TextField } from '@material-ui/core';
 
 
@@ -19,7 +19,7 @@ export const AddItemForm: React.VFC<AddItemFormPropsType> = React.memo( props =>
     backgroundStyle
   } = props;
 
-  console.log( 'Отрисовка AddItemForm');
+  console.log( 'Отрисовка AddItemForm placeholder', inputPlaceholder );
 
   const [ text, setText ] = useState<string>( '' );
   const [ error, setError ] = useState<string | null>( null );
@@ -28,7 +28,7 @@ export const AddItemForm: React.VFC<AddItemFormPropsType> = React.memo( props =>
     fontWeight: 'bold'
   };
 
-  const addItem = () => {
+  const addItem = useCallback( () => {
     if ( text.trim() ) {
       onSubmit( text );
       setText( '' );
@@ -37,7 +37,7 @@ export const AddItemForm: React.VFC<AddItemFormPropsType> = React.memo( props =>
       setError( 'Empty text not allowed...' );
       setText( '' );
     }
-  };
+  }, [ text, onSubmit ] );
 
   return (
       <Box

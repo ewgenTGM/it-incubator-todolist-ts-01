@@ -6,16 +6,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Task, TaskType } from './Task';
 
 export type TodoListPropsType = {
-  id: string
+  todoId: string
   label: string
   tasks: Array<TaskType>
   currentFilter: FilterValuesType
-  addTask: ( text: string, todoListId: string ) => void
-  removeTask: ( id: string, todoListId: string ) => void
-  setFilter: ( filter: FilterValuesType, todoListId: string ) => void
-  setIsDone: ( id: string, value: boolean, todoListId: string ) => void
-  changeTaskLabel: ( id: string, value: string, todoListId: string ) => void
-  removeTodoList: ( todoListId: string ) => void
+  addTask: ( todoId: string, text: string ) => void
+  removeTask: ( todoId: string, taskId: string ) => void
+  setFilter: ( filter: FilterValuesType, todoId: string ) => void
+  setIsDone: ( taskId: string, value: boolean, todoId: string ) => void
+  changeTaskLabel: ( taskId: string, value: string, todoId: string ) => void
+  removeTodoList: ( todoId: string ) => void
 }
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
@@ -23,15 +23,19 @@ export type FilterValuesType = 'all' | 'active' | 'completed';
 export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( props => {
 
   const {
-    id,
+    todoId,
     label,
     tasks,
     currentFilter,
-    addTask,
-    setFilter,
-    removeTodoList
+    setFilter
   } = props;
+
   console.log( 'Отрисовка TodoListWithAllTasks' );
+
+
+  const removeTodoList = useCallback( () => {
+    props.removeTodoList( todoId );
+  }, [ todoId ] );
 
   let filteredTasks: Array<TaskType>;
 
@@ -47,12 +51,13 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
       break;
   }
 
-  const setIsDone = useCallback( props.setIsDone, [ id, props.setIsDone ] );
-  const removeTask = useCallback( props.removeTask, [ id, props.removeTask ] );
-  const changeTaskLabel = useCallback( props.changeTaskLabel, [ id, props.changeTaskLabel ] );
+  const setIsDone = useCallback( props.setIsDone, [ todoId, props.setIsDone ] );
+  const addTask = useCallback( props.addTask, [ todoId, props.addTask ] );
+  const removeTask = useCallback( ( taskId: string ) => props.removeTask( todoId, taskId ), [ todoId ] );
+  const changeTaskLabel = useCallback( props.changeTaskLabel, [ todoId, props.changeTaskLabel ] );
 
   const mappedTasks = filteredTasks.map( task => <Task
-          id={ id }
+          todoId={ todoId }
           task={ task }
           changeTaskLabel={ changeTaskLabel }
           removeTask={ removeTask }
@@ -70,21 +75,21 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'all' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'all', id ) }>
+          onClick={ () => setFilter( 'all', todoId ) }>
         All
       </Button>
       <Button
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'active' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'active', id ) }>
+          onClick={ () => setFilter( 'active', todoId ) }>
         Active
       </Button>
       <Button
           size={ 'small' }
           color={ 'primary' }
           variant={ currentFilter === 'completed' ? 'contained' : 'outlined' }
-          onClick={ () => setFilter( 'completed', id ) }>
+          onClick={ () => setFilter( 'completed', todoId ) }>
         Completed
       </Button>
     </Box>
@@ -98,7 +103,7 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
             title={ 'Remove todo' }>
           <IconButton
               style={ { position: 'absolute', top: '5px', right: '5px', padding: '0' } }
-              onClick={ () => removeTodoList( id ) }>
+              onClick={ removeTodoList }>
             <DeleteIcon
                 fontSize={ 'default' }
                 className={ 'delete_btn' }
@@ -107,7 +112,7 @@ export const TodoListWithAllTasks: React.FC<TodoListPropsType> = React.memo( pro
         </Tooltip>
         <div className='todo_title'>{ label }</div>
         <AddItemForm
-            onSubmit={ text => addTask( text, id ) }
+            onSubmit={ text => addTask( todoId, text ) }
             buttonLabel={ 'Add task' }
             inputPlaceholder={ 'Input task' }/>
         { filterButtons }
