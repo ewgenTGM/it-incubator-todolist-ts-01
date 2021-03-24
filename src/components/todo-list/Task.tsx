@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox, IconButton, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { EditableSpan } from '../editable-span/EditableSpan';
+import './Task.css'
 
 export type TaskType = {
   taskId: string

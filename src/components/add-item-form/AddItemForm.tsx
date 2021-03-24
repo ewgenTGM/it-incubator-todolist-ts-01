@@ -2,10 +2,10 @@ import React, { CSSProperties, useCallback, useState } from 'react';
 import { Box, Button, TextField } from '@material-ui/core';
 
 
-type AddItemFormPropsType = {
+export type AddItemFormPropsType = {
   onSubmit: ( text: string ) => void
   inputPlaceholder?: string
-  buttonLabel: string
+  buttonLabel?: string
   defaultWidth?: string
   backgroundStyle?: CSSProperties
 }
@@ -72,7 +72,7 @@ export const AddItemForm: React.VFC<AddItemFormPropsType> = React.memo( props =>
             variant={ 'contained' }
             size={ 'small' }
             onClick={ addItem }>
-          { buttonLabel }
+          { buttonLabel ? buttonLabel : 'ADD' }
         </Button>
       </Box>
   );

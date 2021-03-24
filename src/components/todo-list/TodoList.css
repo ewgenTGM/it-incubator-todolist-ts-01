@@ -35,20 +35,7 @@
     animation: shadowing 5s infinite;
 }
 
-.task {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid black;
-    border-radius: 3px;
-    border-left: 3px solid;
-    border-right: 3px solid;
-    margin: 5px 0;
-}
 
-.done {
-    opacity: 60%;
-}
 
 fieldset {
     border: 1px solid black;
