@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import './App.css';
 import { v1 } from 'uuid';
 import { AddItemForm } from './add-item-form/AddItemForm';
-import { FilterValuesType, TaskType, TodoList } from './todo-list/TodoList';
+import { FilterValuesType } from './todo-list/TodoList';
 import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AddTodo, RemoveTodo, SetFilter, TodoStateType } from '../redux/todo-reducer';
