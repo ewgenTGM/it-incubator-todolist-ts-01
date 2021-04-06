@@ -1,3 +1,7 @@
+.editable_span__container{
+    text-align: center;
+}
+
 .editable_span {
     width: 80%;
 }
@@ -5,3 +9,24 @@
 .input {
     width: 80%;
 }
+
+@keyframes shadowing {
+    0% {
+        text-shadow: none
+    }
+    50% {
+        text-shadow: 0 0 3px black;
+    }
+    100% {
+        text-shadow: none
+    }
+}
+
+.superSpan {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    animation: shadowing 5s infinite;
+}
+

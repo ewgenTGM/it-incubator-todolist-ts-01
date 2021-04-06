@@ -15,7 +15,6 @@ export type TaskPropsType = {
   task: TaskType
   removeTask: ( todoId: string, taskId: string ) => void
   changeTaskLabel: ( taskId: string, value: string, todoId: string ) => void
-  // setIsDone: ( taskId: string, value: boolean, todoId: string ) => void
   setIsDone: ( taskId: string, value: boolean ) => void
 }
 export const Task: React.FC<TaskPropsType> = React.memo( props => {

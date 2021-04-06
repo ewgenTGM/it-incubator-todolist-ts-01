@@ -28,12 +28,12 @@ export const GetTodoLists = () => {
   </div>;
 };
 
-export const CreateTodolist = () => {
+export const AddTodolist = () => {
   const [state, setState] = useState<any>(null);
   const [title, setTitle] = useState<string>('');
   const addTodoList = () => {
     if (title.trim().length !== 0) {
-      todoApi.createTodoList(title).then(setState);
+      todoApi.addTodoList(title).then(setState);
       setTitle('');
     }
   };
