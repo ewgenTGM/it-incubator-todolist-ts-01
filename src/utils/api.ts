@@ -38,7 +38,7 @@ export const todoApi = {
 
     getTasks(todolistId: string) {
         return mySuperAxios.get<GetTaskResponseType>(`todo-lists/${todolistId}/tasks`)
-            .then(res => res.data);
+            .then(res => res.data.items);
     },
 
     addTask(todolistId: string, title: string) {
@@ -90,7 +90,7 @@ type AddTodoListResponseType = AddItemResponseType<TodoListDomainType>
 
 type AddTaskResponseType = AddItemResponseType<TaskDomainType>
 
-type TaskDomainType = {
+export type TaskDomainType = {
     'id': string
     'title': string
     'description': string

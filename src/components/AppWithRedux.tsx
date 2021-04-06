@@ -17,7 +17,9 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {RootStateType} from '../redux/store';
 import {TodoListWithAllTasks} from './todo-list/TodoListWithAllTasks';
-import {SetTodos_api, SetTodosThunk, TodoStateType_api} from '../redux/api-todo-reducer';
+import {SetTodosThunk, TodoStateType_api} from '../redux/api-todo-reducer';
+import {SetTasksFromApiThunk, TaskStateType_api} from '../redux/api-task-reducer';
+import {TaskDomainType} from '../utils/api';
 
 export const AppWithRedux = React.memo(() => {
 
@@ -26,12 +28,17 @@ export const AppWithRedux = React.memo(() => {
     const dispatch = useDispatch();
 
     const todos_from_api = useSelector<RootStateType, TodoStateType_api>(state => state.todoApi);
+    const tasks_from_api = useSelector<RootStateType, TaskStateType_api>(state => state.taskApi);
     const todos = useSelector<RootStateType, TodoStateType>(state => state.todos);
     const tasks = useSelector<RootStateType, TaskStateType>(state => state.tasks);
 
     useEffect(() => {
         dispatch(SetTodosThunk());
     }, []);
+
+    useEffect(() => {
+        todos_from_api.forEach(todo => dispatch(SetTasksFromApiThunk(todo.id)));
+    }, [todos_from_api]);
 
     const setFilter = useCallback((filter: FilterValuesType, todoId: string) => {
         dispatch(SetFilter(todoId, filter));
