@@ -1,176 +1,161 @@
-import { tasksInitialState } from './initialState';
-import { TaskType } from '../components/todo-list/Task';
+import {TaskDomainType, todoApi} from '../utils/api';
+import {
+    AddTodoActionType,
+    RemoveTodoActionType,
+    SetTodosFromApiActionType,
+    TODO_ACTION_TYPE
+} from './todo-reducer';
+import {AppThunkType} from './store';
+import {log} from 'util';
 
 export enum TASK_ACTION_TYPE {
-  ADD_TASK = 'ADD_TASK',
-  ADD_TODO_TASK_ARRAY = 'ADD_TODO_TASK_ARRAY',
-  REMOVE_TODO_TASK_ARRAY = 'REMOVE_TODO_TASK_ARRAY',
-  REMOVE_TASK = 'REMOVE_TASK',
-  SET_IS_DONE = 'SET_IS_DONE',
-  CHANGE_TITLE = 'CHANGE_TITLE'
+    SET_TASKS_FROM_API,
+    ADD_TASK,
+    REMOVE_TASK,
+    SET_IS_DONE,
+    CHANGE_TITLE
 }
 
 export type TaskStateType = {
-  [key: string]: Array<TaskType>
+    [key: string]: Array<TaskDomainType>
 }
 
-type RemoveTodoTaskArrayActionType = {
-  type: TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY
-  payload: {
-    todoId: string
-  }
-}
+type SetTasksFromApiActionType = ReturnType<typeof SetTasksFromApi>
 
-export const RemoveTodoTaskArray = ( todoId: string ): RemoveTodoTaskArrayActionType => ( {
-  type: TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY,
-  payload: {
-    todoId
-  }
+const SetTasksFromApi = (id: string, tasks: Array<TaskDomainType>) => {
+    return {
+        type: TASK_ACTION_TYPE.SET_TASKS_FROM_API as const,
+        payload: {
+            id,
+            tasks
+        }
+    };
+};
+
+export const SetTasksFromApiTC = (id: string): AppThunkType => async dispatch => {
+    try {
+        const tasks = await todoApi.getTasks(id);
+        if (tasks.length > 0) {
+            dispatch(SetTasksFromApi(id, tasks));
+        }
+    } catch (e) {
+        throw new Error(e);
+    }
+};
+
+type AddTaskActionType = ReturnType<typeof AddTask>
+
+export const AddTask = (todoId: string, taskId: string, title: string, isDone: boolean = false) => ( {
+    type: TASK_ACTION_TYPE.ADD_TASK as const,
+    payload: {
+        todoId,
+        taskId,
+        title,
+        isDone
+    }
 } );
 
-type AddTodoTaskArrayActionType = {
-  type: TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY
-  payload: {
-    todoId: string
-    title: string
-  }
-}
+type RemoveTaskActionType = ReturnType<typeof RemoveTask>
 
-export const AddTodoTaskArray = ( todoId: string, title: string ): AddTodoTaskArrayActionType => ( {
-  type: TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY,
-  payload: {
-    todoId,
-    title
-  }
+export const RemoveTask = (todoId: string, taskId: string) => ( {
+    type: TASK_ACTION_TYPE.REMOVE_TASK as const,
+    payload: {
+        todoId,
+        taskId
+    }
 } );
 
+type SetIsDoneActionType = ReturnType<typeof SetIsDone>
 
-type AddTaskActionType = {
-  type: TASK_ACTION_TYPE.ADD_TASK,
-  payload: {
-    todoId: string,
-    taskId: string,
-    title: string,
-    isDone: boolean
-  }
-}
-
-export const AddTask = ( todoId: string, taskId: string, title: string, isDone: boolean = false ): AddTaskActionType => ( {
-  type: TASK_ACTION_TYPE.ADD_TASK,
-  payload: {
-    todoId,
-    taskId,
-    title,
-    isDone
-  }
+export const SetIsDone = (todoId: string, taskId: string, isDone: boolean) => ( {
+    type: TASK_ACTION_TYPE.SET_IS_DONE as const,
+    payload: {
+        todoId,
+        taskId,
+        isDone
+    }
 } );
 
-type RemoveTaskActionType = {
-  type: TASK_ACTION_TYPE.REMOVE_TASK,
-  payload: {
-    todoId: string
-    taskId: string
-  }
-}
-
-export const RemoveTask = ( todoId: string, taskId: string ): RemoveTaskActionType => ( {
-  type: TASK_ACTION_TYPE.REMOVE_TASK,
-  payload: {
-    todoId,
-    taskId
-  }
+type ChangeTitleActionType = ReturnType<typeof ChangeTaskTitle>
+export const ChangeTaskTitle = (todoId: string, taskId: string, title: string) => ( {
+    type: TASK_ACTION_TYPE.CHANGE_TITLE as const,
+    payload: {
+        todoId,
+        taskId,
+        title
+    }
 } );
 
-type SetIsDoneActionType = {
-  type: TASK_ACTION_TYPE.SET_IS_DONE,
-  payload: {
-    todoId: string,
-    taskId: string,
-    isDone: boolean
-  }
-}
-
-export const SetIsDone = ( todoId: string, taskId: string, isDone: boolean ): SetIsDoneActionType => ( {
-  type: TASK_ACTION_TYPE.SET_IS_DONE,
-  payload: {
-    todoId,
-    taskId,
-    isDone
-  }
-} );
-
-type ChangeTitleActionType = {
-  type: TASK_ACTION_TYPE.CHANGE_TITLE,
-  payload: {
-    todoId: string,
-    taskId: string,
-    title: string
-  }
-}
-
-export const ChangeTaskTitle = ( todoId: string, taskId: string, title: string ): ChangeTitleActionType => ( {
-  type: TASK_ACTION_TYPE.CHANGE_TITLE,
-  payload: {
-    todoId,
-    taskId,
-    title
-  }
-} );
-
-type TaskReducerActionType =
-    AddTodoTaskArrayActionType
+export type TaskReducerActionType =
+    SetTasksFromApiActionType
     | AddTaskActionType
     | RemoveTaskActionType
     | SetIsDoneActionType
     | ChangeTitleActionType
-    | RemoveTodoTaskArrayActionType;
+    | SetTodosFromApiActionType
+    | AddTodoActionType
+    | RemoveTodoActionType;
 
-export const taskReducer = ( state: TaskStateType = tasksInitialState, action: TaskReducerActionType ): TaskStateType => {
-  switch ( action.type ) {
-    case TASK_ACTION_TYPE.ADD_TODO_TASK_ARRAY: {
-      return { ...state, [action.payload.todoId]: [] };
-    }
-    case TASK_ACTION_TYPE.REMOVE_TODO_TASK_ARRAY: {
-      const newState = { ...state };
-      delete newState[action.payload.todoId];
-      return { ...newState };
-    }
-    case TASK_ACTION_TYPE.ADD_TASK: {
-      const task: TaskType = {
-        taskId: action.payload.taskId,
-        title: action.payload.title,
-        isDone: false
-      };
-      return {
-        ...state,
-        [action.payload.todoId]: [ task, ...state[action.payload.todoId] ]
-      };
-    }
-    case TASK_ACTION_TYPE.REMOVE_TASK: {
-      return {
-        ...state,
-        [action.payload.todoId]: state[action.payload.todoId].filter( task => task.taskId !== action.payload.taskId )
-      };
-    }
+export const taskReducer = (state: TaskStateType = {}, action: TaskReducerActionType): TaskStateType => {
+    switch (action.type) {
 
-    case TASK_ACTION_TYPE.SET_IS_DONE: {
-      const tasks = state[action.payload.todoId].map( task => task.taskId === action.payload.taskId ? ( {
-        ...task,
-        isDone: action.payload.isDone
-      } ) : task );
-      return { ...state, [action.payload.todoId]: tasks };
-    }
+        case TODO_ACTION_TYPE.SET_TODOS_FROM_API: {
+            const newState: TaskStateType = {};
+            action.payload.todos.forEach(todo => newState[todo.id] = []);
+            return newState;
+        }
 
-    case TASK_ACTION_TYPE.CHANGE_TITLE: {
-      const tasks = state[action.payload.todoId].map( task => task.taskId === action.payload.taskId ? ( {
-        ...task,
-        title: action.payload.title
-      } ) : task );
-      return { ...state, [action.payload.todoId]: tasks };
-    }
+        case TODO_ACTION_TYPE.REMOVE_TODO: {
+            const newState = {...state};
+            delete newState[action.payload.id];
+            return {...newState};
+        }
 
-    default: {
-      return state;
+        case TODO_ACTION_TYPE.ADD_TODO: {
+            return {...state, [action.payload.todo.id]: []};
+        }
+
+        case TASK_ACTION_TYPE.SET_TASKS_FROM_API: {
+            return {...state, [action.payload.id]: action.payload.tasks};
+
+        }
+
+        /*case TASK_ACTION_TYPE.ADD_TASK: {
+         const task: TaskType = {
+         taskId: action.payload.taskId,
+         title: action.payload.title,
+         isDone: false
+         };
+         return {
+         ...state,
+         [action.payload.todoId]: [task, ...state[action.payload.todoId]]
+         };
+         }*/
+        /* case TASK_ACTION_TYPE.REMOVE_TASK: {
+         return {
+         ...state,
+         [action.payload.todoId]: state[action.payload.todoId].filter(task => task.taskId !== action.payload.taskId)
+         };
+         }*/
+
+        /*case TASK_ACTION_TYPE.SET_IS_DONE: {
+         const tasks = state[action.payload.todoId].map(task => task.taskId === action.payload.taskId ? ( {
+         ...task,
+         isDone: action.payload.isDone
+         } ) : task);
+         return {...state, [action.payload.todoId]: tasks};
+         }*/
+
+        /*case TASK_ACTION_TYPE.CHANGE_TITLE: {
+         const tasks = state[action.payload.todoId].map(task => task.taskId === action.payload.taskId ? ( {
+         ...task,
+         title: action.payload.title
+         } ) : task);
+         return {...state, [action.payload.todoId]: tasks};
+         }*/
+
+        default: {
+            return state;
+        }
     }
-  }
 };

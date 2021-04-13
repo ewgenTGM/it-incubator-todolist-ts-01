@@ -5,7 +5,7 @@ const API_KEY = 'a3f1a737-1827-41ef-9c53-49394bbbe1b8';
 
 const mySuperAxios = axios.create({
     baseURL: BASE_URL,
-    timeout: 3000,
+    // timeout: 10000,
     withCredentials: true,
     headers: {
         'API-KEY': API_KEY
