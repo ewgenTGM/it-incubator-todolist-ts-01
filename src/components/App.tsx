@@ -12,14 +12,15 @@ import {
     TodoStateType
 } from '../redux/todo-reducer';
 import {
-    AddTask,
-    ChangeTaskTitle,
-    SetIsDone,
+    AddTaskTC,
+    ChangeTaskTC,
+    RemoveTaskTC,
     TaskStateType
 } from '../redux/task-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootStateType} from '../redux/store';
 import {FilterValuesType, TodoList} from './todo-list/TodoList';
+import {TaskDomainType} from '../utils/api';
 
 export const App = React.memo(() => {
 
@@ -52,24 +53,20 @@ export const App = React.memo(() => {
         dispatch(ChangeTodoTitleTC(id, title));
     }, []);
 
-    // const removeTask = useCallback((todoId: string, taskId: string) => {
-    //     dispatch(RemoveTask(todoId, taskId));
-    // }, []);
+    const removeTask = useCallback((todoId: string, taskId: string) => {
+        dispatch(RemoveTaskTC(todoId, taskId));
+    }, []);
 
-    // const addTask = useCallback((todoId: string, newTaskText: string) => {
-    //     if (newTaskText.trim() === '') {
-    //         return;
-    //     }
-    //     dispatch(AddTask(todoId, v1(), newTaskText));
-    // }, []);
+    const addTask = useCallback((todoId: string, newTaskText: string) => {
+        if (newTaskText.trim() === '') {
+            return;
+        }
+        dispatch(AddTaskTC(todoId, newTaskText));
+    }, []);
 
-    // const setIsDone = useCallback((taskId: string, value: boolean, todoId: string) => {
-    //     dispatch(SetIsDone(todoId, taskId, value));
-    // }, []);
-
-    // const changeTaskTitle = useCallback((taskId: string, value: string, todoId: string) => {
-    //     dispatch(ChangeTaskTitle(todoId, taskId, value));
-    // }, []);
+    const changeTask = useCallback((task: TaskDomainType) => {
+        dispatch(ChangeTaskTC(task));
+    }, []);
 
     const mappedTodoLists = todos.map(todoList => {
         return (
@@ -78,23 +75,13 @@ export const App = React.memo(() => {
                 todoId={todoList.id}
                 label={todoList.title}
                 tasks={tasks[todoList.id]}
-                // addTask={addTask}
-                // removeTask={removeTask}
+                addTask={addTask}
+                removeTask={removeTask}
                 setFilter={setFilter}
-                // currentFilter={todoList.filter}
-                // setIsDone={setIsDone}
-                removeTodoList={removeTodoList}
-                // changeTaskLabel={changeTaskTitle}
-                changeTodoTitle={changeTodoTitle}
-                addTask={() => {
-                }}
-                removeTask={() => {
-                }}
                 currentFilter={todoList.filter}
-                setIsDone={() => {
-                }}
-                changeTaskLabel={() => {
-                }}
+                removeTodoList={removeTodoList}
+                changeTask={changeTask}
+                changeTodoTitle={changeTodoTitle}
             /> );
     });
 

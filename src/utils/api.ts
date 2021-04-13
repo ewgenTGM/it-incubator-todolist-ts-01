@@ -26,6 +26,7 @@ export const todoApi = {
     addTodoList(title: string) {
         return mySuperAxios.post<AddTodoListResponseType>('todo-lists', {
             title: title
+
         }).then(res => res.data);
     },
 
@@ -50,9 +51,9 @@ export const todoApi = {
             .then(res => res.data);
     },
 
-    updateTaskTitle(todolistId: string, taskId: string, title: string) {
-        return mySuperAxios.put(`todo-lists/${todolistId}/tasks/${taskId}`, {title})
-            .then(res => res.data);
+    updateTask(task: TaskDomainType) {
+        return mySuperAxios.put<AddTaskResponseType>(`todo-lists/${task.todoListId}/tasks/${task.id}`, {...task})
+            .then(res => res.data.data.item);
     },
 
     deleteTask(todolistId: string, taskId: string) {

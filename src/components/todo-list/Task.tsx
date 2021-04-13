@@ -5,16 +5,22 @@ import {EditableSpan} from '../editable-span/EditableSpan';
 import './Task.css';
 import {TaskDomainType} from '../../utils/api';
 
-
 export type TaskPropsType = {
     task: TaskDomainType
     removeTask: (todoId: string, taskId: string) => void
-    changeTaskLabel: (taskId: string, value: string, todoId: string) => void
-    setIsDone: (taskId: string, value: boolean) => void
+    changeTask: (task: TaskDomainType) => void
 }
 export const Task: React.FC<TaskPropsType> = React.memo(props => {
-    const {task, setIsDone, changeTaskLabel} = props;
+    const {task} = props;
     console.log('Отрисовка Task c title', task.title);
+
+    const changeTaskStatus = (value: boolean) => {
+        props.changeTask({...task, status: value ? 2 : 1});
+    };
+
+    const changeTaskTitle = (title: string) => {
+        props.changeTask({...task, title});
+    };
 
     const removeTask = () => {
         if (!window.confirm(`Are You sure want to remove <${task.title}> task?`)) {
@@ -26,7 +32,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(props => {
     return (
         <div
             key={task.id}
-            className={'task ' + ( task.status === 1 ? 'done' : '' )}>
+            className={'task ' + ( task.status === 2 ? 'done' : '' )}>
             <Tooltip title={'Remove task'}>
                 <IconButton
                     style={{cursor: 'pointer', position: 'absolute', top: '2px', right: '2px', padding: '0'}}
@@ -39,12 +45,12 @@ export const Task: React.FC<TaskPropsType> = React.memo(props => {
             <Checkbox
                 color={'primary'}
                 readOnly={true}
-                checked={task.status === 1}
-                onChange={(e) => setIsDone(task.id, e.currentTarget.checked)}
+                checked={task.status === 2}
+                onChange={(e) => changeTaskStatus(e.currentTarget.checked)}
             />
             <EditableSpan
                 initialText={task.title}
-                callback={(e) => changeTaskLabel(task.id, e, task.todoListId)}/>
+                callback={(e) => changeTaskTitle(e)}/>
         </div>
     );
 });

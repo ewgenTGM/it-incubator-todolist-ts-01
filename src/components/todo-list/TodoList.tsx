@@ -17,8 +17,7 @@ export type TodoListPropsType = {
     addTask: (todoId: string, text: string) => void
     removeTask: (todoId: string, taskId: string) => void
     setFilter: (filter: FilterValuesType, todoId: string) => void
-    setIsDone: (taskId: string, value: boolean, todoId: string) => void
-    changeTaskLabel: (taskId: string, value: string, todoId: string) => void
+    changeTask: (task: TaskDomainType) => void
     changeTodoTitle: (todoId: string, value: string) => void
     removeTodoList: (todoId: string) => void
 }
@@ -26,12 +25,12 @@ export type TodoListPropsType = {
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
 export const TodoList: React.FC<TodoListPropsType> = React.memo(props => {
-
     const {
         todoId,
         label,
         tasks,
-        currentFilter
+        currentFilter,
+        changeTask
     } = props;
 
     console.log('Отрисовка TodoList c title', label);
@@ -49,10 +48,10 @@ export const TodoList: React.FC<TodoListPropsType> = React.memo(props => {
             filteredTasks = tasks;
             break;
         case 'active':
-            filteredTasks = tasks.filter(t => !( t.status === 1 ));
+            filteredTasks = tasks.filter(t => !( t.status === 2 ));
             break;
         case 'completed':
-            filteredTasks = tasks.filter(t => t.status === 1);
+            filteredTasks = tasks.filter(t => t.status === 2);
             break;
     }
     const removeTodoList = () => {
@@ -67,16 +66,13 @@ export const TodoList: React.FC<TodoListPropsType> = React.memo(props => {
     }, [todoId]);
 
     const setFilter = useCallback((filter: FilterValuesType) => props.setFilter(filter, todoId), [todoId]);
-    const setIsDone = useCallback((taskId: string, value: boolean) => props.setIsDone(taskId, value, todoId), [todoId]);
     const addTask = useCallback((text) => props.addTask(todoId, text), [todoId]);
-    const changeTaskLabel = useCallback(props.changeTaskLabel, []);
     const removeTask = useCallback(props.removeTask, []);
 
     const mappedTasks = filteredTasks.map(task => <Task
             task={task}
-            changeTaskLabel={changeTaskLabel}
             removeTask={removeTask}
-            setIsDone={setIsDone}
+            changeTask={changeTask}
             key={task.id}
         />
     );

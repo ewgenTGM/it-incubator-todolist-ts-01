@@ -3,11 +3,11 @@ import {AppThunkType} from './store';
 import {todoApi} from '../utils/api';
 
 export enum TODO_ACTION_TYPE {
-    ADD_TODO,
-    REMOVE_TODO,
-    SET_FILTER,
-    CHANGE_TODO_TITLE,
-    SET_TODOS_FROM_API
+    ADD_TODO = 'ADD_TODO',
+    REMOVE_TODO = 'REMOVE_TODO',
+    SET_FILTER = 'SET_FILTER',
+    CHANGE_TODO_TITLE = 'CHANGE_TODO_TITLE',
+    SET_TODOS_FROM_API = 'SET_TODOS_FROM_API'
 }
 
 export type TodoType = {
