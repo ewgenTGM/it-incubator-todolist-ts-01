@@ -1,10 +1,14 @@
 import axios from 'axios';
 
+const BASE_URL = 'https://social-network.samuraijs.com/api/1.1';
+const API_KEY = 'a3f1a737-1827-41ef-9c53-49394bbbe1b8';
+
 const mySuperAxios = axios.create({
-    baseURL: 'https://social-network.samuraijs.com/api/1.1',
+    baseURL: BASE_URL,
+    timeout: 3000,
     withCredentials: true,
     headers: {
-        'API-KEY': 'a3f1a737-1827-41ef-9c53-49394bbbe1b8'
+        'API-KEY': API_KEY
     }
 });
 
@@ -78,12 +82,12 @@ export type TodoListDomainType = {
 type GetTodoListsResponseType = Array<TodoListDomainType>
 
 type AddItemResponseType<T> = {
-    'data': {
-        'item': T
+    data: {
+        item: T
     },
-    'messages': Array<string>
-    'fieldsErrors': Array<string>
-    'resultCode': number
+    messages: Array<string>
+    fieldsErrors: Array<string>
+    resultCode: number
 }
 
 type AddTodoListResponseType = AddItemResponseType<TodoListDomainType>
@@ -91,21 +95,21 @@ type AddTodoListResponseType = AddItemResponseType<TodoListDomainType>
 type AddTaskResponseType = AddItemResponseType<TaskDomainType>
 
 export type TaskDomainType = {
-    'id': string
-    'title': string
-    'description': string
-    'todoListId': string
-    'order': number
-    'status': number
-    'priority': number
-    'startDate': string
-    'deadline': string
-    'addedDate': string
+    id: string
+    title: string
+    description: string
+    todoListId: string
+    order: number
+    status: number
+    priority: number
+    startDate: string
+    deadline: string
+    addedDate: string
 }
 
 type GetTaskResponseType = {
-    'items': Array<TaskDomainType>
-    'totalCount': number
-    'error': string
+    items: Array<TaskDomainType>
+    totalCount: number
+    error: string
 }
 

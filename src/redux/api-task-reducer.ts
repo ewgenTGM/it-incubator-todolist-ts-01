@@ -1,5 +1,5 @@
 import {TaskDomainType, todoApi} from '../utils/api';
-import {Dispatch} from 'redux';
+import {AppThunkType} from './store';
 
 export enum TASK_ACTION_TYPE_API {
     ADD_TASKS_FROM_API = 'ADD_TASKS_FROM_API'
@@ -9,15 +9,12 @@ export type TaskStateType_api = {
     [key: string]: Array<TaskDomainType>
 }
 
-type AddTasksActionType_api = {
-    type: TASK_ACTION_TYPE_API.ADD_TASKS_FROM_API
-    payload: {
-        todolistId: string
-        tasks: Array<TaskDomainType>
-    }
-}
+type AddTasksActionType_api = ReturnType<typeof AddTaskFromApi>
 
-const AddTaskFromApi = (todolistId: string, tasks: Array<TaskDomainType>): AddTasksActionType_api => {
+export type TaskReducerActionType_api =
+    AddTasksActionType_api
+
+const AddTaskFromApi = (todolistId: string, tasks: Array<TaskDomainType>) => {
     return {
         type: TASK_ACTION_TYPE_API.ADD_TASKS_FROM_API,
         payload: {
@@ -27,11 +24,16 @@ const AddTaskFromApi = (todolistId: string, tasks: Array<TaskDomainType>): AddTa
     };
 };
 
-export const SetTasksFromApiThunk = (todolistId: string) => (dispatch: Dispatch) => {
-    todoApi.getTasks(todolistId).then(res => dispatch(AddTaskFromApi(todolistId, res)));
+export const SetTasksFromApiThunk = (todolistId: string): AppThunkType => async dispatch => {
+    try {
+        const tasks = await todoApi.getTasks(todolistId);
+        dispatch(AddTaskFromApi(todolistId, tasks));
+    } catch (e) {
+        throw Error(e);
+    }
 };
 
-export const apiTaskReducer = (state: TaskStateType_api = {}, action: AddTasksActionType_api): TaskStateType_api => {
+export const apiTaskReducer = (state: TaskStateType_api = {}, action: TaskReducerActionType_api): TaskStateType_api => {
     switch (action.type) {
         case TASK_ACTION_TYPE_API.ADD_TASKS_FROM_API:
             return {

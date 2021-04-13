@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {v1} from 'uuid';
 import {AddItemForm} from './add-item-form/AddItemForm';
-import {FilterValuesType} from './todo-list/TodoList';
 import {AppBar, Box, Button, Container, IconButton, Toolbar, Typography} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import {AddTodo, ChangeTodoTitle, RemoveTodo, SetFilter, TodoStateType} from '../redux/todo-reducer';
@@ -16,10 +15,9 @@ import {
 } from '../redux/task-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootStateType} from '../redux/store';
-import {TodoListWithAllTasks} from './todo-list/TodoListWithAllTasks';
 import {SetTodosThunk, TodoStateType_api} from '../redux/api-todo-reducer';
 import {SetTasksFromApiThunk, TaskStateType_api} from '../redux/api-task-reducer';
-import {TaskDomainType} from '../utils/api';
+import {FilterValuesType, TodoList} from './todo-list/TodoList';
 
 export const AppWithRedux = React.memo(() => {
 
@@ -80,7 +78,7 @@ export const AppWithRedux = React.memo(() => {
 
     const mappedTodoLists = todos.map(todoList => {
         return (
-            <TodoListWithAllTasks
+            <TodoList
                 key={todoList.todoId}
                 todoId={todoList.todoId}
                 label={todoList.title}
