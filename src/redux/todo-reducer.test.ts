@@ -1,5 +1,5 @@
 import {v1} from 'uuid';
-import {AddTodo, RemoveTodo, SetFilter, todoReducer, TodoStateType} from './todo-reducer';
+import {AddTodo, RemoveTodo, SetFilter, todoReducer, TodoStateType, TodoType} from './todo-reducer';
 
 let state: TodoStateType = [];
 
@@ -8,20 +8,26 @@ const todoId2: string = v1();
 
 beforeEach(() => {
     state = [
-        {todoId: todoId1, title: 'Todolist_1 title', filter: 'all'},
-        {todoId: todoId2, title: 'Todolist_2 title', filter: 'all'}
+        {id: todoId1, title: 'Todolist_1 title', filter: 'all', order: 1, addedDate: ''},
+        {id: todoId2, title: 'Todolist_2 title', filter: 'all', order: 1, addedDate: ''}
     ];
 });
 
 test('Add todolist', () => {
     const newTodoTitle = 'TEST TODO LIST TITLE';
     const newTodoId = v1();
-    const newState = todoReducer(state, AddTodo(newTodoId, newTodoTitle));
+    const newTodo: TodoType = {
+        id: newTodoId,
+        title: newTodoTitle,
+        filter: 'all',
+        order: 2,
+        addedDate: ''
+    };
+    const newState = todoReducer(state, AddTodo(newTodo));
     expect(state).not.toBe(newState);
     expect(state).not.toBe(newState);
     expect(newState.length).toBe(state.length + 1);
-    expect(newState[0].title).toBe(newTodoTitle);
-    expect(newState[0].todoId).toBe(newTodoId);
+    expect(newState.find(todo=>todo.id===newTodoId)).toEqual(newTodo);
 });
 
 test('Remove todolist', () => {
@@ -29,8 +35,8 @@ test('Remove todolist', () => {
     expect(state).not.toBe(newState);
     expect(state).not.toBe(newState);
     expect(newState.length).toBe(state.length - 1);
-    expect(newState.find(todo => todo.todoId === todoId1)).toBeUndefined();
-    expect(state.find(todo => todo.todoId === todoId1)).not.toBeUndefined();
+    expect(newState.find(todo => todo.id === todoId1)).toBeUndefined();
+    expect(state.find(todo => todo.id === todoId1)).not.toBeUndefined();
 });
 
 test('Set "active" filter', () => {
@@ -38,6 +44,6 @@ test('Set "active" filter', () => {
     expect(state).not.toBe(newState);
     expect(state).not.toBe(newState);
     expect(newState.length).toBe(state.length);
-    expect(newState.find(todo => todo.todoId === todoId1)?.filter === 'active').toBeTruthy();
-    expect(state.find(todo => todo.todoId === todoId2)?.filter === 'all').toBeTruthy();
+    expect(newState.find(todo => todo.id === todoId1)?.filter === 'active').toBeTruthy();
+    expect(state.find(todo => todo.id === todoId2)?.filter === 'all').toBeTruthy();
 });

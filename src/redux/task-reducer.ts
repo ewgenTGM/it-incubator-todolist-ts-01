@@ -46,7 +46,7 @@ export const SetTasksFromApiTC = (id: string): AppThunkType => async dispatch =>
 
 type AddTaskActionType = ReturnType<typeof AddTask>
 
-const AddTask = (task: TaskDomainType) => ( {
+export const AddTask = (task: TaskDomainType) => ( {
     type: TASK_ACTION_TYPE.ADD_TASK as const,
     payload: {
         task
@@ -64,7 +64,7 @@ export const AddTaskTC = (todoId: string, title: string): AppThunkType => async 
 
 type RemoveTaskActionType = ReturnType<typeof RemoveTask>
 
-const RemoveTask = (todoId: string, taskId: string) => ( {
+export const RemoveTask = (todoId: string, taskId: string) => ( {
     type: TASK_ACTION_TYPE.REMOVE_TASK as const,
     payload: {
         todoId,
@@ -82,7 +82,7 @@ export const RemoveTaskTC = (todoId: string, taskId: string): AppThunkType => as
 };
 
 type ChangeTaskActionType = ReturnType<typeof ChangeTask>
-const ChangeTask = (task: TaskDomainType) => ( {
+export const ChangeTask = (task: TaskDomainType) => ( {
     type: TASK_ACTION_TYPE.CHANGE_TASK as const,
     payload: {
         task

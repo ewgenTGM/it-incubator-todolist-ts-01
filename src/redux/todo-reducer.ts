@@ -63,7 +63,7 @@ export const SetFilter = (id: string, filter: FilterValuesType) => {
 
 export type AddTodoActionType = ReturnType<typeof AddTodo>
 
-const AddTodo = (todo: TodoType) => {
+export const AddTodo = (todo: TodoType) => {
     return {
         type: TODO_ACTION_TYPE.ADD_TODO as const,
         payload: {
@@ -89,7 +89,7 @@ export const AddTodoTC = (title: string): AppThunkType => async dispatch => {
 
 export type RemoveTodoActionType = ReturnType<typeof RemoveTodo>
 
-const RemoveTodo = (id: string) => {
+export const RemoveTodo = (id: string) => {
     return {
         type: TODO_ACTION_TYPE.REMOVE_TODO as const,
         payload: {id}
