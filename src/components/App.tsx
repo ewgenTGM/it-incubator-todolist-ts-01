@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {AddItemForm} from './add-item-form/AddItemForm';
-import {AppBar, Box, Button, Container, IconButton, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Box, Button, Container, IconButton, LinearProgress, Toolbar, Typography} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
     AddTodoTC,
@@ -21,6 +21,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootStateType} from '../redux/store';
 import {FilterValuesType, TodoList} from './todo-list/TodoList';
 import {TaskDomainType} from '../utils/api';
+import {AppStateType} from '../redux/app-reducer';
+import {ErrorSnackbar} from './errorSnackbar/ErrorSnackbar';
 
 export const App = React.memo(() => {
 
@@ -30,6 +32,7 @@ export const App = React.memo(() => {
 
     const todos = useSelector<RootStateType, TodoStateType>(state => state.todos);
     const tasks = useSelector<RootStateType, TaskStateType>(state => state.tasks);
+    const status = useSelector<RootStateType, AppStateType>(state => state.appStatus);
 
     useEffect(() => {
         dispatch(SetTodosFromApiTC());
@@ -102,6 +105,8 @@ export const App = React.memo(() => {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            {status.status === 'loading' && <LinearProgress color={'secondary'}/>}
+
             <Container style={{marginTop: '25px'}}>
                 <Box
                     display={'flex'}
@@ -122,6 +127,7 @@ export const App = React.memo(() => {
                     </Box>
                 </Box>
             </Container>
+            <ErrorSnackbar/>
         </>
     );
 });

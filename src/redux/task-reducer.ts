@@ -8,10 +8,10 @@ import {
 import {AppThunkType} from './store';
 
 export enum TASK_ACTION_TYPE {
-    SET_TASKS_FROM_API = 'SET_TASKS_FROM_API',
-    ADD_TASK = 'ADD_TASK',
-    REMOVE_TASK = 'REMOVE_TASK',
-    CHANGE_TASK = 'CHANGE_TASK'
+    SET_TASKS_FROM_API = 'APP/TASK/SET_TASKS_FROM_API',
+    ADD_TASK = 'APP/TASK/ADD_TASK',
+    REMOVE_TASK = 'APP/TASK/REMOVE_TASK',
+    CHANGE_TASK = 'APP/TASK/CHANGE_TASK'
 }
 
 export type TaskStateType = {

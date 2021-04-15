@@ -1,13 +1,14 @@
 import {FilterValuesType} from '../components/todo-list/TodoList';
 import {AppThunkType} from './store';
 import {todoApi} from '../utils/api';
+import {SetRequestStatus} from './app-reducer';
 
 export enum TODO_ACTION_TYPE {
-    ADD_TODO = 'ADD_TODO',
-    REMOVE_TODO = 'REMOVE_TODO',
-    SET_FILTER = 'SET_FILTER',
-    CHANGE_TODO_TITLE = 'CHANGE_TODO_TITLE',
-    SET_TODOS_FROM_API = 'SET_TODOS_FROM_API'
+    ADD_TODO = 'APP/TODO/ADD_TODO',
+    REMOVE_TODO = 'APP/TODO/REMOVE_TODO',
+    SET_FILTER = 'APP/TODO/SET_FILTER',
+    CHANGE_TODO_TITLE = 'APP/TODO/CHANGE_TODO_TITLE',
+    SET_TODOS_FROM_API = 'APP/TODO/SET_TODOS_FROM_API'
 }
 
 export type TodoType = {
@@ -33,6 +34,7 @@ export const SetTodosFromApi = (todos: Array<TodoType>) => {
 
 export const SetTodosFromApiTC = (): AppThunkType => async dispatch => {
     try {
+        dispatch(SetRequestStatus('loading'));
         console.log('Start fetching for todos');
         let todos = await todoApi.getTodoLists();
         const _todos: Array<TodoType> = todos.map(todo => {
@@ -43,6 +45,7 @@ export const SetTodosFromApiTC = (): AppThunkType => async dispatch => {
             return curr;
         });
         dispatch(SetTodosFromApi(_todos));
+        dispatch(SetRequestStatus('succeeded'));
         console.log('End fetching for todos');
     } catch (e) {
         throw new Error(e);
